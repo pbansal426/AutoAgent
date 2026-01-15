@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Research Planning Document - AI Nurse Robot Platform</title>
+  <style>
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:#0b0b10;
+      color:#e9e9f2;
+      line-height:1.55;
+    }
+    .topbar{
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(10px);
+      background: rgba(11,11,16,0.65);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 12px 0;
+      z-index: 10;
+    }
+    .topbar-inner{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      font-size: 14px;
+    }
+    .tag{
+      font-size: 12px;
+      color: rgba(233,233,242,0.65);
+    }
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 26px 18px 70px;
+    }
+    h1{
+      margin: 8px 0 6px;
+      font-size: 30px;
+      letter-spacing: 0.2px;
+    }
+    .subtitle{
+      margin: 0 0 18px;
+      color: rgba(233,233,242,0.75);
+      max-width: 820px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 880px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+    }
+    .card{
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 18px 18px 10px;
+      margin:18px 18px 10px;
+    }
+    h2{
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing: 0.2px;
+    }
+    ul{
+      margin: 0 0 14px 18px;
+      padding: 0;
+    }
+    li{ margin: 6px 0; }
+    .pill{
+      display:inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      margin: 6px 8px 0 0;
+      background: rgba(120,180,255,0.14);
+      border: 1px solid rgba(120,180,255,0.25);
+      color: rgba(233,233,242,0.9);
+    }
+    .subhead{
+      margin: 14px 0 8px;
+      font-weight: 700;
+      color: rgba(233,233,242,0.9);
+    }
+    .muted{
+      color: rgba(233,233,242,0.7);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+    .footer{
+      margin-top: 16px;
+      color: rgba(233,233,242,0.6);
+      font-size: 12px;
+    }
+    .hr{
+      height:1px;
+      background: rgba(255,255,255,0.08);
+      margin: 12px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <div class="brand">Research Planning Document</div>
+        <div class="tag">AI Nurse Robot Platform</div>
+      </div>
+      <div class="tag">Portfolio-ready ✅</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h1>AI Nurse Robot Platform</h1>
+    <p class="subtitle">
+      A connected system where caregivers manage senior care info through a portal, the robot screen guides the senior with calm prompts,
+      and a Python backend coordinates reminders + real-time alerts (with future support for YOLO + robot movement).
+    </p>
+
+    <div class="card">
+      <h2>Quick Summary</h2>
+      <ul>
+        <li>Nurses/kids (caregivers) can log in and enter/update senior info (meds, contacts, conditions, notes).</li>
+        <li>Robot screen UI (running on a MacBook later) shows simple calm prompts, reminders, and call buttons.</li>
+        <li>Backend “brain” connects everything + sends alerts/events (med due, fall detected, etc.).</li>
+        <li>Hardware/robot movement + YOLO integration come later (but architecture supports it).</li>
+      </ul>
+      <span class="pill">Portal</span>
+      <span class="pill">Robot UI</span>
+      <span class="pill">Python Brain</span>
+      <span class="pill">Realtime Events</span>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Care Portal (web)</h2>
+        <div class="subhead">Core actions</div>
+        <ul>
+          <li>Login (nurse/child)</li>
+          <li>Create a senior profile</li>
+        </ul>
+
+        <div class="subhead">Enter/edit</div>
+        <ul>
+          <li>Meds + schedules</li>
+          <li>Emergency contacts</li>
+          <li>Notes / symptoms / problems</li>
+        </ul>
+
+        <div class="subhead">View</div>
+        <ul>
+          <li>Event history (missed meds, alerts, future fall alerts)</li>
+          <li>Adherence (taken/missed)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Robot UI (web or local UI on robot)</h2>
+        <ul>
+          <li>Big text + simple buttons</li>
+          <li>“Next medication” + “Taken / Snooze”</li>
+          <li>“Call nurse / Call child”</li>
+          <li>Event banners (ex: “It’s time for your medication”)</li>
+        </ul>
+        <div class="muted">
+          Note: This UI will run on the robot’s MacBook screen later. For now, it’s a UI that connects to the backend.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Backend Brain (Python)</h2>
+      <ul>
+        <li>Stores all data in database</li>
+        <li>Sends real-time events to UIs</li>
+        <li>Scheduling system for meds/check-ins</li>
+      </ul>
+
+      <div class="hr"></div>
+
+      <div class="subhead">Later</div>
+      <ul>
+        <li>YOLO fall detection events</li>
+        <li>Robot movement commands</li>
+        <li>AI assistant reasoning</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Tech / Tools I’ll likely use</h2>
+      <ul>
+        <li><b>Backend:</b> Python (FastAPI)</li>
+        <li><b>Database:</b> Postgres (or SQLite for early local testing)</li>
+        <li><b>Realtime events:</b> WebSockets</li>
+        <li><b>Portal UI:</b> simple web frontend (Next.js or basic HTML pages early)</li>
+        <li><b>Robot UI:</b> web UI (kiosk-style) or simple local UI</li>
+        <li><b>AI later:</b> OpenAI API (tool-using “brain” that reads/writes the database)</li>
+        <li><b>Version control:</b> GitHub monorepo (apps + services in one place)</li>
+      </ul>
+      <div class="muted">
+        Goal: keep the system modular — portal + robot UI share the same backend and database so everything stays interconnected.
+      </div>
+    </div>
+
+    <div class="footer">
+      Tip: Commit this file to your portfolio repo and link to it from your portfolio homepage as your “Research Planning Document.”
+    </div>
+  </div>
+</body>
+</html>
