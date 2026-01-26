@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Research Planning Document - AI Nurse Robot Platform</title>
+  <title>Research Planning Document - OBD2 AI Car Assistant</title>
   <style>
     body{
       margin:0;
@@ -111,111 +111,192 @@
     }
   </style>
 </head>
+
 <body>
   <div class="topbar">
     <div class="topbar-inner">
       <div>
         <div class="brand">Research Planning Document</div>
-        <div class="tag">AI Nurse Robot Platform</div>
+        <div class="tag">OBD2 AI Car Assistant</div>
       </div>
       <div class="tag">Portfolio-ready ✅</div>
     </div>
   </div>
 
   <div class="wrap">
-    <h1>AI Nurse Robot Platform</h1>
+    <h1>OBD2 AI Car Assistant</h1>
     <p class="subtitle">
-      A connected system where caregivers manage senior care info through a portal, the robot screen guides the senior with calm prompts,
-      and a Python backend coordinates reminders + real-time alerts (with future support for YOLO + robot movement).
+      A Raspberry Pi–powered device that plugs into a car’s OBD2 port, collects diagnostic + live sensor data,
+      and uses AI to explain issues in simple language — including urgency, likely causes, and next steps
+      a driver can take before going to a mechanic.
     </p>
 
     <div class="card">
       <h2>Quick Summary</h2>
       <ul>
-        <li>Nurses/kids (caregivers) can log in and enter/update senior info (meds, contacts, conditions, notes).</li>
-        <li>Robot screen UI (running on a MacBook later) shows simple calm prompts, reminders, and call buttons.</li>
-        <li>Backend “brain” connects everything + sends alerts/events (med due, fall detected, etc.).</li>
-        <li>Hardware/robot movement + YOLO integration come later (but architecture supports it).</li>
+        <li>Raspberry Pi connects to a car’s ECU through an OBD2 adapter and pulls diagnostics + live data.</li>
+        <li>Logs trouble codes (DTCs) + sensor readings (RPM, coolant temp, speed, etc.).</li>
+        <li>AI “translates” codes into plain English + gives safe, realistic troubleshooting steps.</li>
+        <li>Outputs a clean “Car Health Report” that the user can save/share with a mechanic.</li>
       </ul>
-      <span class="pill">Portal</span>
-      <span class="pill">Robot UI</span>
-      <span class="pill">Python Brain</span>
-      <span class="pill">Realtime Events</span>
+      <span class="pill">Raspberry Pi</span>
+      <span class="pill">OBD2 Data</span>
+      <span class="pill">AI Diagnosis</span>
+      <span class="pill">Car Health Report</span>
     </div>
 
     <div class="grid">
       <div class="card">
-        <h2>Care Portal (web)</h2>
+        <h2>Device + OBD2 Data Collection</h2>
+
         <div class="subhead">Core actions</div>
         <ul>
-          <li>Login (nurse/child)</li>
-          <li>Create a senior profile</li>
+          <li>Connect to car using USB/Bluetooth OBD2 adapter (ELM327-style)</li>
+          <li>Read Diagnostic Trouble Codes (stored + pending)</li>
+          <li>Read live sensor values (PIDs)</li>
         </ul>
 
-        <div class="subhead">Enter/edit</div>
+        <div class="subhead">Live data (examples)</div>
         <ul>
-          <li>Meds + schedules</li>
-          <li>Emergency contacts</li>
-          <li>Notes / symptoms / problems</li>
+          <li>RPM, vehicle speed</li>
+          <li>Coolant temperature, intake air temperature</li>
+          <li>Engine load, throttle position</li>
+          <li>Fuel system status (if available)</li>
         </ul>
 
-        <div class="subhead">View</div>
-        <ul>
-          <li>Event history (missed meds, alerts, future fall alerts)</li>
-          <li>Adherence (taken/missed)</li>
-        </ul>
+        <div class="muted">
+          Goal: keep it reliable + fast enough for real-time updates while the car is running.
+        </div>
       </div>
 
       <div class="card">
-        <h2>Robot UI (web or local UI on robot)</h2>
+        <h2>User Interface (simple + helpful)</h2>
         <ul>
-          <li>Big text + simple buttons</li>
-          <li>“Next medication” + “Taken / Snooze”</li>
-          <li>“Call nurse / Call child”</li>
-          <li>Event banners (ex: “It’s time for your medication”)</li>
+          <li>Clean “Scan Now” button</li>
+          <li>Displays active codes + short explanation</li>
+          <li>Shows live sensor dashboard (basic graphs later)</li>
+          <li>Generates a downloadable “Car Health Report”</li>
+          <li>Optional: “Clear Codes” with warnings + confirmation</li>
         </ul>
+
         <div class="muted">
-          Note: This UI will run on the robot’s MacBook screen later. For now, it’s a UI that connects to the backend.
+          Note: UI can start as terminal output, then upgrade to a local web dashboard
+          hosted directly on the Raspberry Pi.
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h2>Backend Brain (Python)</h2>
+      <h2>AI Assistant (the “translator”)</h2>
       <ul>
-        <li>Stores all data in database</li>
-        <li>Sends real-time events to UIs</li>
-        <li>Scheduling system for meds/check-ins</li>
+        <li>Takes in: trouble codes + sensor snapshot + optional user symptoms</li>
+        <li>Outputs: explanation, urgency level, likely causes, safe next steps</li>
+        <li>Creates a mechanic-ready summary: “what to check first”</li>
       </ul>
 
       <div class="hr"></div>
 
-      <div class="subhead">Later</div>
+      <div class="subhead">Important safety rules</div>
       <ul>
-        <li>YOLO fall detection events</li>
-        <li>Robot movement commands</li>
-        <li>AI assistant reasoning</li>
+        <li>Never guarantees repairs — suggests “likely” causes</li>
+        <li>Clearly labels severity: Low / Medium / High</li>
+        <li>Warns user when not to drive (ex: flashing check-engine, overheating)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Backend Brain (Python)</h2>
+      <ul>
+        <li>Reads ECU data and sensor PIDs on demand or continuously</li>
+        <li>Stores scan results + timestamps in a database/file (CSV / JSON / SQLite)</li>
+        <li>Builds a clean prompt structure for the AI assistant</li>
+        <li>Serves the UI using a simple local server</li>
+      </ul>
+
+      <div class="hr"></div>
+
+      <div class="subhead">Later upgrades</div>
+      <ul>
+        <li>Automatic “pattern detection” (ex: overheating trend, misfire behavior)</li>
+        <li>Offline explanation mode (basic code dictionary if no internet)</li>
+        <li>Phone-friendly UI with QR code to open dashboard quickly</li>
       </ul>
     </div>
 
     <div class="card">
       <h2>Tech / Tools I’ll likely use</h2>
       <ul>
-        <li><b>Backend:</b> Python (FastAPI)</li>
-        <li><b>Database:</b> Postgres (or SQLite for early local testing)</li>
-        <li><b>Realtime events:</b> WebSockets</li>
-        <li><b>Portal UI:</b> simple web frontend (Next.js or basic HTML pages early)</li>
-        <li><b>Robot UI:</b> web UI (kiosk-style) or simple local UI</li>
-        <li><b>AI later:</b> OpenAI API (tool-using “brain” that reads/writes the database)</li>
-        <li><b>Version control:</b> GitHub monorepo (apps + services in one place)</li>
+        <li><b>Hardware:</b> Raspberry Pi 5 + OBD2 adapter (USB preferred for stability)</li>
+        <li><b>Language:</b> Python</li>
+        <li><b>OBD reading:</b> python-OBD library</li>
+        <li><b>Backend server:</b> FastAPI (or Flask for the simplest prototype)</li>
+        <li><b>Database:</b> SQLite (local testing) → optional Postgres later</li>
+        <li><b>AI:</b> OpenAI API (structured “diagnose + recommend + warn” output)</li>
+        <li><b>Logging:</b> CSV / JSON export + saved scan history</li>
+        <li><b>Version control:</b> GitHub repo (hardware + software together)</li>
       </ul>
+
       <div class="muted">
-        Goal: keep the system modular — portal + robot UI share the same backend and database so everything stays interconnected.
+        Goal: make it simple enough to run in a car, but designed cleanly so it can scale into a real product later.
       </div>
     </div>
 
+    <div class="card">
+      <h2>Potential Challenges</h2>
+      <ul>
+        <li>Adapter reliability (cheap ELM327 clones can disconnect or lag)</li>
+        <li>Car compatibility (some cars don’t support every PID)</li>
+        <li>Power stability in a car (safe shutdown + avoiding SD corruption)</li>
+        <li>AI accuracy (must avoid overconfident advice and include warnings)</li>
+        <li>Keeping UI “simple” while still being useful</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Initial Timeline (Milestones)</h2>
+      <div class="subhead">Week 1 — Connect + Read Codes</div>
+      <ul>
+        <li>Set up Raspberry Pi + adapter connection</li>
+        <li>Print stored + pending DTCs</li>
+        <li>Save scan result as JSON</li>
+      </ul>
+
+      <div class="subhead">Week 2 — Live Sensors + Logging</div>
+      <ul>
+        <li>Stream key sensor values (RPM, temps, speed)</li>
+        <li>Log continuous data to CSV</li>
+        <li>Create a basic dashboard view</li>
+      </ul>
+
+      <div class="subhead">Week 3 — AI Explanations + Report</div>
+      <ul>
+        <li>Build AI prompt formatting</li>
+        <li>Generate clean diagnosis + steps + warnings</li>
+        <li>Create a “Car Health Report” output page</li>
+      </ul>
+
+      <div class="subhead">Week 4 — Polish + Portfolio Demo</div>
+      <ul>
+        <li>Improve UI layout + clarity</li>
+        <li>Add scan history (previous reports)</li>
+        <li>Record demo video + add to portfolio</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Next Steps (This Week)</h2>
+      <ul>
+        <li>Pick an OBD2 adapter (USB recommended for first testing)</li>
+        <li>Install python-OBD and confirm connection works</li>
+        <li>Write a script that prints: connection status + DTCs + 3 live sensors</li>
+        <li>Decide UI format: terminal prototype vs local web dashboard</li>
+        <li>Design the report format: “Issue • Urgency • Causes • Fix steps”</li>
+      </ul>
+    </div>
+
     <div class="footer">
-      Tip: Commit this file to your portfolio repo and link to it from your portfolio homepage as your “Research Planning Document.”
+      Tip: Commit this file to your portfolio repo and link to it from your portfolio homepage
+      as your “Research Planning Document.”
     </div>
   </div>
 </body>
