@@ -1,256 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MVP Specification - Smart-Brain OBD2 Ecosystem</title>
+    <title>AutoAgent - Vehicle Telemetry & AI Ecosystem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #030305;
+            --text-main: #f0f0f5;
+            --text-muted: #8e8e9f;
+            --accent: #00f2fe;
+            --accent-alt: #4facfe;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --card-border: rgba(255, 255, 255, 0.05);
+        }
+        * { box-sizing: border-box; }
         body {
             margin: 0;
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            background: #050508;
-            color: #e9e9f2;
-            line-height: 1.55;
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top left, rgba(0, 242, 254, 0.05), transparent 40%), var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
         }
 
-        .topbar {
-            position: sticky;
-            top: 0;
-            backdrop-filter: blur(12px);
-            background: rgba(5, 5, 8, 0.8);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 0;
-            z-index: 10;
+        .navbar {
+            position: sticky; top: 0;
+            backdrop-filter: blur(20px);
+            background: rgba(3, 3, 5, 0.7);
+            border-bottom: 1px solid var(--card-border);
+            padding: 16px 0;
+            z-index: 100;
         }
 
-        .topbar-inner {
-            max-width: 980px;
+        .container {
+            max-width: 1040px;
             margin: 0 auto;
-            padding: 0 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 0 24px;
         }
 
-        .brand {
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            font-size: 14px;
-            text-transform: uppercase;
-            color: #4facfe;
-        }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; font-size: 1.2rem; background: linear-gradient(135deg, var(--accent), var(--accent-alt)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
+        .nav-version { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; padding: 4px 12px; background: rgba(255,255,255,0.03); border-radius: 20px; border: 1px solid var(--card-border); }
 
-        .wrap {
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 26px 18px 70px;
-        }
+        .hero { padding: 100px 0 60px; text-align: center; }
+        .hero h1 { font-size: 4rem; font-weight: 800; margin: 0 0 20px; line-height: 1.1; letter-spacing: -1.5px; }
+        .hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px; }
 
-        h1 {
-            margin: 8px 0 6px;
-            font-size: 32px;
-            letter-spacing: -0.5px;
-            background: linear-gradient(to right, #fff, #4facfe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .tech-pill { display: inline-block; padding: 8px 16px; background: rgba(0, 242, 254, 0.1); color: var(--accent); border-radius: 30px; font-weight: 600; font-size: 0.9rem; border: 1px solid rgba(0, 242, 254, 0.2); margin: 0 8px; }
 
-        .subtitle {
-            margin: 0 0 24px;
-            color: rgba(233, 233, 242, 0.7);
-            font-size: 18px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        @media (min-width: 880px) {
-            .grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 60px; }
 
         .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 16px;
-            transition: transform 0.2s ease;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 32px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.4); }
 
-        h2 {
-            margin: 0 0 12px;
-            font-size: 20px;
-            color: #4facfe;
-        }
+        .card h3 { margin: 0 0 16px; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; }
 
-        ul {
-            margin: 0 0 14px 18px;
-            padding: 0;
-        }
+        .feature-list { list-style: none; padding: 0; margin: 0; }
+        .feature-list li { padding: 12px 0; border-bottom: 1px solid var(--card-border); font-size: 0.95rem; display: flex; align-items: center; }
+        .feature-list li:last-child { border-bottom: none; }
+        .feature-list li::before { content: '→'; color: var(--accent); margin-right: 12px; font-weight: bold; }
 
-        li {
-            margin: 8px 0;
-            font-size: 14px;
-        }
-
-        .pill {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 600;
-            margin: 4px 4px 0 0;
-            background: rgba(79, 172, 254, 0.1);
-            border: 1px solid rgba(79, 172, 254, 0.3);
-            color: #4facfe;
-        }
-
-        .subhead {
-            margin: 18px 0 8px;
-            font-weight: 700;
-            color: #fff;
-            font-size: 15px;
-        }
-
-        .hr {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 16px 0;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-            margin-top: 10px;
-        }
-
-        .data-table th {
-            text-align: left;
-            color: rgba(233, 233, 242, 0.5);
-            padding-bottom: 8px;
-        }
-
-        .data-table td {
-            padding: 6px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
+        .footer { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--card-border); margin-top: 40px; }
     </style>
 </head>
-
 <body>
-    <div class="topbar">
-        <div class="topbar-inner">
+    <nav class="navbar">
+        <div class="container nav-content">
+            <div class="logo">AutoAgent Project</div>
+            <div class="nav-version">Gen2 MVP Architecture</div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="hero">
+            <h1>The Vehicle Intelligence<br/>Ecosystem.</h1>
+            <p>A sophisticated platform merging real-time OBD2 telemetry, multi-vehicle fleet management, and LangGraph-powered AI diagnostics into a single cohesive interface.</p>
             <div>
-                <div class="brand">Auto Agent</div>
+                <span class="tech-pill">React + Vite</span>
+                <span class="tech-pill">FastAPI + SQLite</span>
+                <span class="tech-pill">Gemini 1.5 Flash</span>
             </div>
-            <div style="font-size: 12px; opacity: 0.6;">MVP Technical Specs v1.0</div>
-        </div>
-    </div>
-
-    <div class="wrap">
-        <h1>Vehicle Telematics & AI Assistant</h1>
-        <p class="subtitle">Modernizing affordable cars with a Raspberry Pi-powered "Smart Brain," high-fidelity digital
-            cockpit, and Gemini-driven diagnostics.</p>
-
-        <div class="card">
-            <h2>MVP Hardware Architecture</h2>
-            <ul>
-                <li><b>Core:</b> Raspberry Pi 4/5 (Broadcom BCM2711/2712).</li>
-                <li><b>Vehicle Interface:</b> USB OBD-II Adapter (ELM327 Chipset) for maximum stability.</li>
-                <li><b>Data Link:</b> 4G/5G Cellular Modem for real-time cloud synchronization.</li>
-                <li><b>Location:</b> USB GPS Module for tracking and geofencing.</li>
-            </ul>
-            <span class="pill">Raspberry Pi</span><span class="pill">ELM327</span><span class="pill">LTE/5G</span><span
-                class="pill">GPS</span>
-        </div>
+        </header>
 
         <div class="grid">
             <div class="card">
-                <h2>Software Tech Stack</h2>
-                <div class="subhead">Backend & Processing</div>
-                <ul>
-                    <li><b>Language:</b> Python (python-obd library).</li>
-                    <li><b>Real-time Stream:</b> Firebase Realtime Database (for 5Hz gauges).</li>
-                    <li><b>Cold Storage:</b> PostgreSQL (for health logs and driving scores).</li>
-                    <li><b>AI:</b> Gemini 1.5 Flash (Diagnostic translation & repair plans).</li>
+                <h3>⚡ Live Telemetry Systems</h3>
+                <p>High-fidelity data streaming to capture and interpret vehicular metrics securely.</p>
+                <ul class="feature-list">
+                    <li>Dynamic WebSocket connections</li>
+                    <li>Speed / RPM continuous visualization</li>
+                    <li>Automated crash detection heuristics</li>
+                    <li>Simulated event injection framework</li>
                 </ul>
             </div>
 
             <div class="card">
-                <h2>Digital Cockpit (UI/UX)</h2>
-                <div class="subhead">Focus: "Eyes on the Road"</div>
-                <ul>
-                    <li><b>Framework:</b> Flutter for Web (60 FPS high-fidelity gauges).</li>
-                    <li><b>Primary View:</b> Dynamic radial Gauges (RPM/Speed) and "Contextual Leaf" for efficiency
-                        feedback.</li>
-                    <li><b>Mechanic View:</b> 3D Wireframe of car with color-coded health alerts.</li>
+                <h3>🧠 Master AI Mechanic</h3>
+                <p>Our contextual engine utilizes Google's Gemini LLMs to parse sensor codes.</p>
+                <ul class="feature-list">
+                    <li>Analyzes P-codes (e.g., P0300, P0171)</li>
+                    <li>Plain-English predictive repair plans</li>
+                    <li>Integrated ChatWidget overlay</li>
+                    <li>Persistent context for active vehicles</li>
                 </ul>
             </div>
-        </div>
 
-        <div class="card">
-            <h2>Data Acquisition Strategy</h2>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Frequency</th>
-                        <th>Parameters (PIDs)</th>
-                        <th>Purpose</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><b>5 Hz (High)</b></td>
-                        <td>RPM, Throttle, Steering Angle</td>
-                        <td>Live Gauges / Safety Alerts</td>
-                    </tr>
-                    <tr>
-                        <td><b>1 Hz (Mid)</b></td>
-                        <td>Coolant Temp, Fuel Level, Speed</td>
-                        <td>Efficiency & Health Monitoring</td>
-                    </tr>
-                    <tr>
-                        <td><b>30s (Low)</b></td>
-                        <td>DTCs (Error Codes), Engine Load</td>
-                        <td>AI Diagnosis / MIL Alerts</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="card">
-            <h2>Key MVP Features</h2>
-            <div class="subhead">AI Master Mechanic</div>
-            <ul>
-                <li><b>Natural Language Fixes:</b> Converts complex codes into clear DIY steps via Gemini.</li>
-                <li><b>Price Transparency:</b> Direct comparison of DIY parts cost vs. Local Mechanic labor rates.</li>
-            </ul>
-            <div class="hr"></div>
-            <div class="subhead">Safety & Monitoring</div>
-            <ul>
-                <li><b>Parental Control:</b> Real-time GPS tracking and geofence alerts.</li>
-                <li><b>Driving Scorecard:</b> Smoothness-based grades to lower insurance premiums.</li>
-                <li><b>Collision Alarm:</b> Emergency triggers based on accelerometer/RPM spikes.</li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <h2>Implementation Timeline</h2>
-            <ul>
-                <li><b>Week 1:</b> Establishment of Pi-to-ECU connection and raw data logging.</li>
-                <li><b>Week 2:</b> Implementation of Firebase 5Hz streaming and Flutter gauge prototype.</li>
-                <li><b>Week 3:</b> Integration of Gemini 1.5 for automated "Health Report" generation.</li>
-                <li><b>Week 4:</b> End-to-end testing and portfolio demo recording.</li>
-            </ul>
+            <div class="card" style="grid-column: 1 / -1;">
+                <h3>🛡️ Premium User Architecture</h3>
+                <p>A hardened, fully authenticated layout supporting complex garage state management.</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <ul class="feature-list">
+                        <li>Bcrypt Password Cryptography</li>
+                        <li>Dynamic Garage CRUD Operations</li>
+                    </ul>
+                    <ul class="feature-list">
+                        <li>VIN-attached Fleet Profiles</li>
+                        <li>Automated Login Lifecycle</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-</body>
 
+    <footer class="footer">
+        <div class="container">
+            AutoAgent © 2026. Designed for ultimate vehicle observability. Built with AG.
+        </div>
+    </footer>
+</body>
 </html>
