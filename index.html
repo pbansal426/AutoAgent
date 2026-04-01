@@ -1,303 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Research Planning Document - OBD2 AI Car Assistant</title>
-  <style>
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:#0b0b10;
-      color:#e9e9f2;
-      line-height:1.55;
-    }
-    .topbar{
-      position: sticky;
-      top: 0;
-      backdrop-filter: blur(10px);
-      background: rgba(11,11,16,0.65);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 12px 0;
-      z-index: 10;
-    }
-    .topbar-inner{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 0 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .brand{
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      font-size: 14px;
-    }
-    .tag{
-      font-size: 12px;
-      color: rgba(233,233,242,0.65);
-    }
-    .wrap{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 26px 18px 70px;
-    }
-    h1{
-      margin: 8px 0 6px;
-      font-size: 30px;
-      letter-spacing: 0.2px;
-    }
-    .subtitle{
-      margin: 0 0 18px;
-      color: rgba(233,233,242,0.75);
-      max-width: 820px;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-    @media (min-width: 880px){
-      .grid{ grid-template-columns: 1fr 1fr; }
-    }
-    .card{
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 16px;
-      padding: 18px 18px 10px;
-      margin:18px 18px 10px;
-    }
-    h2{
-      margin: 0 0 10px;
-      font-size: 18px;
-      letter-spacing: 0.2px;
-    }
-    ul{
-      margin: 0 0 14px 18px;
-      padding: 0;
-    }
-    li{ margin: 6px 0; }
-    .pill{
-      display:inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      margin: 6px 8px 0 0;
-      background: rgba(120,180,255,0.14);
-      border: 1px solid rgba(120,180,255,0.25);
-      color: rgba(233,233,242,0.9);
-    }
-    .subhead{
-      margin: 14px 0 8px;
-      font-weight: 700;
-      color: rgba(233,233,242,0.9);
-    }
-    .muted{
-      color: rgba(233,233,242,0.7);
-      font-size: 13px;
-      margin-top: 8px;
-    }
-    .footer{
-      margin-top: 16px;
-      color: rgba(233,233,242,0.6);
-      font-size: 12px;
-    }
-    .hr{
-      height:1px;
-      background: rgba(255,255,255,0.08);
-      margin: 12px 0;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MVP Specification - Smart-Brain OBD2 Ecosystem</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            background: #050508;
+            color: #e9e9f2;
+            line-height: 1.55;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(12px);
+            background: rgba(5, 5, 8, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 0;
+            z-index: 10;
+        }
+
+        .topbar-inner {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #4facfe;
+        }
+
+        .wrap {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 26px 18px 70px;
+        }
+
+        h1 {
+            margin: 8px 0 6px;
+            font-size: 32px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            margin: 0 0 24px;
+            color: rgba(233, 233, 242, 0.7);
+            font-size: 18px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 880px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        h2 {
+            margin: 0 0 12px;
+            font-size: 20px;
+            color: #4facfe;
+        }
+
+        ul {
+            margin: 0 0 14px 18px;
+            padding: 0;
+        }
+
+        li {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 4px 4px 0 0;
+            background: rgba(79, 172, 254, 0.1);
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            color: #4facfe;
+        }
+
+        .subhead {
+            margin: 18px 0 8px;
+            font-weight: 700;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        .hr {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 16px 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .data-table th {
+            text-align: left;
+            color: rgba(233, 233, 242, 0.5);
+            padding-bottom: 8px;
+        }
+
+        .data-table td {
+            padding: 6px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
 </head>
 
 <body>
-  <div class="topbar">
-    <div class="topbar-inner">
-      <div>
-        <div class="brand">Research Planning Document</div>
-        <div class="tag">OBD2 AI Car Assistant</div>
-      </div>
-      <div class="tag">Portfolio-ready ✅</div>
-    </div>
-  </div>
-
-  <div class="wrap">
-    <h1>OBD2 AI Car Assistant</h1>
-    <p class="subtitle">
-      A Raspberry Pi–powered device that plugs into a car’s OBD2 port, collects diagnostic + live sensor data,
-      and uses AI to explain issues in simple language — including urgency, likely causes, and next steps
-      a driver can take before going to a mechanic.
-    </p>
-
-    <div class="card">
-      <h2>Quick Summary</h2>
-      <ul>
-        <li>Raspberry Pi connects to a car’s ECU through an OBD2 adapter and pulls diagnostics + live data.</li>
-        <li>Logs trouble codes (DTCs) + sensor readings (RPM, coolant temp, speed, etc.).</li>
-        <li>AI “translates” codes into plain English + gives safe, realistic troubleshooting steps.</li>
-        <li>Outputs a clean “Car Health Report” that the user can save/share with a mechanic.</li>
-      </ul>
-      <span class="pill">Raspberry Pi</span>
-      <span class="pill">OBD2 Data</span>
-      <span class="pill">AI Diagnosis</span>
-      <span class="pill">Car Health Report</span>
-    </div>
-
-    <div class="grid">
-      <div class="card">
-        <h2>Device + OBD2 Data Collection</h2>
-
-        <div class="subhead">Core actions</div>
-        <ul>
-          <li>Connect to car using USB/Bluetooth OBD2 adapter (ELM327-style)</li>
-          <li>Read Diagnostic Trouble Codes (stored + pending)</li>
-          <li>Read live sensor values (PIDs)</li>
-        </ul>
-
-        <div class="subhead">Live data (examples)</div>
-        <ul>
-          <li>RPM, vehicle speed</li>
-          <li>Coolant temperature, intake air temperature</li>
-          <li>Engine load, throttle position</li>
-          <li>Fuel system status (if available)</li>
-        </ul>
-
-        <div class="muted">
-          Goal: keep it reliable + fast enough for real-time updates while the car is running.
+    <div class="topbar">
+        <div class="topbar-inner">
+            <div>
+                <div class="brand">Auto Agent</div>
+            </div>
+            <div style="font-size: 12px; opacity: 0.6;">MVP Technical Specs v1.0</div>
         </div>
-      </div>
+    </div>
 
-      <div class="card">
-        <h2>User Interface (simple + helpful)</h2>
-        <ul>
-          <li>Clean “Scan Now” button</li>
-          <li>Displays active codes + short explanation</li>
-          <li>Shows live sensor dashboard (basic graphs later)</li>
-          <li>Generates a downloadable “Car Health Report”</li>
-          <li>Optional: “Clear Codes” with warnings + confirmation</li>
-        </ul>
+    <div class="wrap">
+        <h1>Vehicle Telematics & AI Assistant</h1>
+        <p class="subtitle">Modernizing affordable cars with a Raspberry Pi-powered "Smart Brain," high-fidelity digital
+            cockpit, and Gemini-driven diagnostics.</p>
 
-        <div class="muted">
-          Note: UI can start as terminal output, then upgrade to a local web dashboard
-          hosted directly on the Raspberry Pi.
+        <div class="card">
+            <h2>MVP Hardware Architecture</h2>
+            <ul>
+                <li><b>Core:</b> Raspberry Pi 4/5 (Broadcom BCM2711/2712).</li>
+                <li><b>Vehicle Interface:</b> USB OBD-II Adapter (ELM327 Chipset) for maximum stability.</li>
+                <li><b>Data Link:</b> 4G/5G Cellular Modem for real-time cloud synchronization.</li>
+                <li><b>Location:</b> USB GPS Module for tracking and geofencing.</li>
+            </ul>
+            <span class="pill">Raspberry Pi</span><span class="pill">ELM327</span><span class="pill">LTE/5G</span><span
+                class="pill">GPS</span>
         </div>
-      </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Software Tech Stack</h2>
+                <div class="subhead">Backend & Processing</div>
+                <ul>
+                    <li><b>Language:</b> Python (python-obd library).</li>
+                    <li><b>Real-time Stream:</b> Firebase Realtime Database (for 5Hz gauges).</li>
+                    <li><b>Cold Storage:</b> PostgreSQL (for health logs and driving scores).</li>
+                    <li><b>AI:</b> Gemini 1.5 Flash (Diagnostic translation & repair plans).</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Digital Cockpit (UI/UX)</h2>
+                <div class="subhead">Focus: "Eyes on the Road"</div>
+                <ul>
+                    <li><b>Framework:</b> Flutter for Web (60 FPS high-fidelity gauges).</li>
+                    <li><b>Primary View:</b> Dynamic radial Gauges (RPM/Speed) and "Contextual Leaf" for efficiency
+                        feedback.</li>
+                    <li><b>Mechanic View:</b> 3D Wireframe of car with color-coded health alerts.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Data Acquisition Strategy</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Frequency</th>
+                        <th>Parameters (PIDs)</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>5 Hz (High)</b></td>
+                        <td>RPM, Throttle, Steering Angle</td>
+                        <td>Live Gauges / Safety Alerts</td>
+                    </tr>
+                    <tr>
+                        <td><b>1 Hz (Mid)</b></td>
+                        <td>Coolant Temp, Fuel Level, Speed</td>
+                        <td>Efficiency & Health Monitoring</td>
+                    </tr>
+                    <tr>
+                        <td><b>30s (Low)</b></td>
+                        <td>DTCs (Error Codes), Engine Load</td>
+                        <td>AI Diagnosis / MIL Alerts</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Key MVP Features</h2>
+            <div class="subhead">AI Master Mechanic</div>
+            <ul>
+                <li><b>Natural Language Fixes:</b> Converts complex codes into clear DIY steps via Gemini.</li>
+                <li><b>Price Transparency:</b> Direct comparison of DIY parts cost vs. Local Mechanic labor rates.</li>
+            </ul>
+            <div class="hr"></div>
+            <div class="subhead">Safety & Monitoring</div>
+            <ul>
+                <li><b>Parental Control:</b> Real-time GPS tracking and geofence alerts.</li>
+                <li><b>Driving Scorecard:</b> Smoothness-based grades to lower insurance premiums.</li>
+                <li><b>Collision Alarm:</b> Emergency triggers based on accelerometer/RPM spikes.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Implementation Timeline</h2>
+            <ul>
+                <li><b>Week 1:</b> Establishment of Pi-to-ECU connection and raw data logging.</li>
+                <li><b>Week 2:</b> Implementation of Firebase 5Hz streaming and Flutter gauge prototype.</li>
+                <li><b>Week 3:</b> Integration of Gemini 1.5 for automated "Health Report" generation.</li>
+                <li><b>Week 4:</b> End-to-end testing and portfolio demo recording.</li>
+            </ul>
+        </div>
     </div>
-
-    <div class="card">
-      <h2>AI Assistant (the “translator”)</h2>
-      <ul>
-        <li>Takes in: trouble codes + sensor snapshot + optional user symptoms</li>
-        <li>Outputs: explanation, urgency level, likely causes, safe next steps</li>
-        <li>Creates a mechanic-ready summary: “what to check first”</li>
-      </ul>
-
-      <div class="hr"></div>
-
-      <div class="subhead">Important safety rules</div>
-      <ul>
-        <li>Never guarantees repairs — suggests “likely” causes</li>
-        <li>Clearly labels severity: Low / Medium / High</li>
-        <li>Warns user when not to drive (ex: flashing check-engine, overheating)</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>Backend Brain (Python)</h2>
-      <ul>
-        <li>Reads ECU data and sensor PIDs on demand or continuously</li>
-        <li>Stores scan results + timestamps in a database/file (CSV / JSON / SQLite)</li>
-        <li>Builds a clean prompt structure for the AI assistant</li>
-        <li>Serves the UI using a simple local server</li>
-      </ul>
-
-      <div class="hr"></div>
-
-      <div class="subhead">Later upgrades</div>
-      <ul>
-        <li>Automatic “pattern detection” (ex: overheating trend, misfire behavior)</li>
-        <li>Offline explanation mode (basic code dictionary if no internet)</li>
-        <li>Phone-friendly UI with QR code to open dashboard quickly</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>Tech / Tools I’ll likely use</h2>
-      <ul>
-        <li><b>Hardware:</b> Raspberry Pi 5 + OBD2 adapter (USB preferred for stability)</li>
-        <li><b>Language:</b> Python</li>
-        <li><b>OBD reading:</b> python-OBD library</li>
-        <li><b>Backend server:</b> FastAPI (or Flask for the simplest prototype)</li>
-        <li><b>Database:</b> SQLite (local testing) → optional Postgres later</li>
-        <li><b>AI:</b> OpenAI API (structured “diagnose + recommend + warn” output)</li>
-        <li><b>Logging:</b> CSV / JSON export + saved scan history</li>
-        <li><b>Version control:</b> GitHub repo (hardware + software together)</li>
-      </ul>
-
-      <div class="muted">
-        Goal: make it simple enough to run in a car, but designed cleanly so it can scale into a real product later.
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Potential Challenges</h2>
-      <ul>
-        <li>Adapter reliability (cheap ELM327 clones can disconnect or lag)</li>
-        <li>Car compatibility (some cars don’t support every PID)</li>
-        <li>Power stability in a car (safe shutdown + avoiding SD corruption)</li>
-        <li>AI accuracy (must avoid overconfident advice and include warnings)</li>
-        <li>Keeping UI “simple” while still being useful</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>Initial Timeline (Milestones)</h2>
-      <div class="subhead">Week 1 — Connect + Read Codes</div>
-      <ul>
-        <li>Set up Raspberry Pi + adapter connection</li>
-        <li>Print stored + pending DTCs</li>
-        <li>Save scan result as JSON</li>
-      </ul>
-
-      <div class="subhead">Week 2 — Live Sensors + Logging</div>
-      <ul>
-        <li>Stream key sensor values (RPM, temps, speed)</li>
-        <li>Log continuous data to CSV</li>
-        <li>Create a basic dashboard view</li>
-      </ul>
-
-      <div class="subhead">Week 3 — AI Explanations + Report</div>
-      <ul>
-        <li>Build AI prompt formatting</li>
-        <li>Generate clean diagnosis + steps + warnings</li>
-        <li>Create a “Car Health Report” output page</li>
-      </ul>
-
-      <div class="subhead">Week 4 — Polish + Portfolio Demo</div>
-      <ul>
-        <li>Improve UI layout + clarity</li>
-        <li>Add scan history (previous reports)</li>
-        <li>Record demo video + add to portfolio</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>Next Steps (This Week)</h2>
-      <ul>
-        <li>Pick an OBD2 adapter (USB recommended for first testing)</li>
-        <li>Install python-OBD and confirm connection works</li>
-        <li>Write a script that prints: connection status + DTCs + 3 live sensors</li>
-        <li>Decide UI format: terminal prototype vs local web dashboard</li>
-        <li>Design the report format: “Issue • Urgency • Causes • Fix steps”</li>
-      </ul>
-    </div>
-
-    <div class="footer">
-      Tip: Commit this file to your portfolio repo and link to it from your portfolio homepage
-      as your “Research Planning Document.”
-    </div>
-  </div>
 </body>
+
 </html>
