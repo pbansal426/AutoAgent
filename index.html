@@ -44,38 +44,44 @@
         .logo { font-weight: 800; font-size: 1.2rem; background: linear-gradient(135deg, var(--accent), var(--accent-alt)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
         .nav-version { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; padding: 4px 12px; background: rgba(255,255,255,0.03); border-radius: 20px; border: 1px solid var(--card-border); }
 
-        .hero { padding: 100px 0 60px; text-align: center; }
-        .hero h1 { font-size: 4rem; font-weight: 800; margin: 0 0 20px; line-height: 1.1; letter-spacing: -1.5px; }
-        .hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px; }
+        .hero { padding: 80px 0 40px; text-align: center; }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; margin: 0 0 20px; line-height: 1.1; letter-spacing: -1.5px; }
+        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 750px; margin: 0 auto 30px; }
 
-        .tech-pill { display: inline-block; padding: 8px 16px; background: rgba(0, 242, 254, 0.1); color: var(--accent); border-radius: 30px; font-weight: 600; font-size: 0.9rem; border: 1px solid rgba(0, 242, 254, 0.2); margin: 0 8px; }
+        .section-title { font-size: 1.8rem; font-weight: 800; margin: 60px 0 30px; border-left: 4px solid var(--accent); padding-left: 15px; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 60px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 40px; }
 
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 24px;
             padding: 32px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
             position: relative;
-            overflow: hidden;
         }
-        .card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-        }
-        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.4); }
-
-        .card h3 { margin: 0 0 16px; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
-        .card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; }
+        .card:hover { transform: translateY(-4px); border-color: rgba(0, 242, 254, 0.2); }
+        .card h3 { margin: 0 0 12px; font-size: 1.4rem; color: var(--accent); }
+        .card h4 { margin: 20px 0 10px; font-size: 1rem; color: var(--text-main); border-bottom: 1px solid var(--card-border); padding-bottom: 5px; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 15px; }
 
         .feature-list { list-style: none; padding: 0; margin: 0; }
-        .feature-list li { padding: 12px 0; border-bottom: 1px solid var(--card-border); font-size: 0.95rem; display: flex; align-items: center; }
-        .feature-list li:last-child { border-bottom: none; }
-        .feature-list li::before { content: '→'; color: var(--accent); margin-right: 12px; font-weight: bold; }
+        .feature-list li { padding: 8px 0; font-size: 0.9rem; display: flex; align-items: flex-start; color: var(--text-muted); }
+        .feature-list li::before { content: '•'; color: var(--accent); margin-right: 10px; }
 
-        .footer { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--card-border); margin-top: 40px; }
+        .badge { font-size: 0.7rem; background: var(--accent); color: #000; padding: 2px 8px; border-radius: 4px; vertical-align: middle; margin-left: 8px; font-weight: 800; }
+
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; background: var(--card-bg); border-radius: 12px; overflow: hidden; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--card-border); }
+        th { background: rgba(255,255,255,0.05); color: var(--accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+
+        .links-container { display: flex; gap: 20px; justify-content: center; margin: 40px 0; }
+        .btn { padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: 600; transition: 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-alt)); color: #000; }
+        .btn-secondary { border: 1px solid var(--accent); color: var(--accent); }
+        .btn:hover { opacity: 0.8; transform: scale(1.05); }
+
+        .footer { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--card-border); margin-top: 60px; }
     </style>
 </head>
 <body>
@@ -88,52 +94,94 @@
 
     <div class="container">
         <header class="hero">
-            <h1>The Vehicle Intelligence<br/>Ecosystem.</h1>
-            <p>A sophisticated platform merging real-time OBD2 telemetry, multi-vehicle fleet management, and LangGraph-powered AI diagnostics into a single cohesive interface.</p>
-            <div>
-                <span class="tech-pill">React + Vite</span>
-                <span class="tech-pill">FastAPI + SQLite</span>
-                <span class="tech-pill">Gemini 1.5 Flash</span>
-            </div>
+            <h1>1. The Core Concept</h1>
+            <p>AutoAgent is a smart bridge between your car and your phone. It takes messy data from your car’s engine (the <strong>Car End</strong>) and turns it into simple, helpful advice on your app (the <strong>User End</strong>) using an AI Master Mechanic and a team of intelligent agents.</p>
         </header>
 
+        <h2 class="section-title">2. System Segmentation</h2>
         <div class="grid">
             <div class="card">
-                <h3>⚡ Live Telemetry Systems</h3>
-                <p>High-fidelity data streaming to capture and interpret vehicular metrics securely.</p>
+                <h3>📡 The Car End <span class="badge">IN DEVELOPMENT</span></h3>
+                <p>The physical "Brain" of the operation acting as the primary data collector and real-time sentinel.</p>
                 <ul class="feature-list">
-                    <li>Dynamic WebSocket connections</li>
-                    <li>Speed / RPM continuous visualization</li>
-                    <li>Automated crash detection heuristics</li>
-                    <li>Simulated event injection framework</li>
+                    <li><strong>Interface:</strong> Plugs into the standard OBD2 port.</li>
+                    <li><strong>Processing:</strong> Raspberry Pi handles initial data filtering.</li>
+                    <li><strong>High-Speed Telemetry:</strong> Captures 5 Hz data (RPM, Throttle, Speed).</li>
+                    <li><strong>Persistence:</strong> Onboard battery and GPS for "Heartbeat" tracking while off.</li>
                 </ul>
             </div>
 
             <div class="card">
-                <h3>🧠 Master AI Mechanic</h3>
-                <p>Our contextual engine utilizes Google's Gemini LLMs to parse sensor codes.</p>
+                <h3>📱 The User End</h3>
+                <p>The interface where data becomes value. This is the primary portal for the driver.</p>
                 <ul class="feature-list">
-                    <li>Analyzes P-codes (e.g., P0300, P0171)</li>
-                    <li>Plain-English predictive repair plans</li>
-                    <li>Integrated ChatWidget overlay</li>
-                    <li>Persistent context for active vehicles</li>
+                    <li><strong>The App:</strong> A React-based web and mobile dashboard.</li>
+                    <li><strong>The Vault:</strong> Secure PostgreSQL database for user profiles and vehicle history.</li>
+                    <li><strong>AI Hosting:</strong> Backend logic where Gemini and LangGraph process raw data into repair plans.</li>
                 </ul>
             </div>
+        </div>
 
-            <div class="card" style="grid-column: 1 / -1;">
-                <h3>🛡️ Premium User Architecture</h3>
-                <p>A hardened, fully authenticated layout supporting complex garage state management.</p>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+        <h2 class="section-title">3. The AI Intelligence Stack</h2>
+        <div class="card" style="margin-bottom: 24px;">
+            <p>AutoAgent uses a specialized team of AI workers that share the same "brain" but have different jobs. This setup ensures the car is monitored from every angle.</p>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-top: 20px;">
+                <div>
+                    <h4>Core Intelligence</h4>
                     <ul class="feature-list">
-                        <li>Bcrypt Password Cryptography</li>
-                        <li>Dynamic Garage CRUD Operations</li>
+                        <li><strong>Gemini 1.5 Flash:</strong> Raw AI power providing high-speed reasoning and code interpretation.</li>
+                        <li><strong>LangGraph:</strong> The digital manager ensuring agents follow logical rules and safety paths.</li>
                     </ul>
+                </div>
+                <div>
+                    <h4>Specialized Nodes</h4>
                     <ul class="feature-list">
-                        <li>VIN-attached Fleet Profiles</li>
-                        <li>Automated Login Lifecycle</li>
+                        <li><strong>SafetyNode:</strong> Detects crashes or mechanical failures instantly.</li>
+                        <li><strong>TripAnalystNode:</strong> Post-drive scans for driving scores and small glitches.</li>
+                        <li><strong>TrendStrategistNode:</strong> Weekly scans for long-term health (battery/MPG).</li>
                     </ul>
                 </div>
             </div>
+        </div>
+
+        <h2 class="section-title">4. MVP Feature Set</h2>
+        <div class="grid">
+            <div class="card">
+                <ul class="feature-list">
+                    <li><strong>Live Cockpit:</strong> Real-time engine performance via WebSockets.</li>
+                    <li><strong>AI Master Mechanic:</strong> On-demand P-code translation to plain English.</li>
+                    <li><strong>Safety Heuristics:</strong> Crash detection via G-force/Speed fluctuations.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <ul class="feature-list">
+                    <li><strong>Smart Garage:</strong> Cloud-based management for VIN and maintenance logs.</li>
+                    <li><strong>Gamified Efficiency:</strong> AI-generated Driver Scores to improve safety and fuel use.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 class="section-title">5. Confirmed Tech Stack</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Technology</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Frontend</td><td>React + Vite (Web/Mobile Portal)</td></tr>
+                <tr><td>Backend</td><td>FastAPI (Python-based Asynchronous Server)</td></tr>
+                <tr><td>AI Brain</td><td>Google Gemini 1.5 Flash API</td></tr>
+                <tr><td>AI Logic</td><td>LangGraph (Agentic Workflow Management)</td></tr>
+                <tr><td>Database</td><td>PostgreSQL / SQLAlchemy (Persistent Storage)</td></tr>
+                <tr><td>Communication</td><td>WebSockets (for 5 Hz real-time streaming)</td></tr>
+            </tbody>
+        </table>
+
+        <div class="links-container">
+            <a href="https://pbansal426.github.io/AutoAgent/" class="btn btn-primary" target="_blank">Live MVP Portal</a>
+            <a href="https://github.com/pbansal426/AutoAgent" class="btn btn-secondary" target="_blank">GitHub Repository</a>
         </div>
     </div>
 
