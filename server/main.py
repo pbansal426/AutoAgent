@@ -6,6 +6,7 @@ import models, database, agents
 import json
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_google_genai import ChatGoogleGenerativeAI
+from sqlalchemy.exc import IntegrityError
 
 app = FastAPI(title="AutoAgent Vehicle Ecosystem")
 
@@ -36,11 +37,27 @@ class PasswordUpdate(BaseModel):
     current_password: str
     new_password: str
 
+class PasswordReset(BaseModel):
+    email: str
+    name: str
+    new_password: str
+
 class VehicleCreate(BaseModel):
     make: str
     model: str
     year: int
     vin: str
+    submodel: Optional[str] = None
+    powertrain: Optional[str] = None
+    body_class: Optional[str] = None
+    engine_cylinders: Optional[str] = None
+    fuel_type: Optional[str] = None
+    drive_type: Optional[str] = None
+    displacement: Optional[str] = None
+    engine_hp: Optional[str] = None
+    color: Optional[str] = None
+    color_name: Optional[str] = None
+    packages: Optional[str] = None
 
 class TelemetryData(BaseModel):
     vin: str
@@ -79,6 +96,26 @@ def login(user: UserLogin, db: Session = Depends(database.get_db)):
     vehicles = db.query(models.Vehicle).filter(models.Vehicle.owner_id == db_user.id).all()
     return {"id": db_user.id, "name": db_user.name, "email": db_user.email, "vehicles": vehicles}
 
+@app.post("/recover-account")
+def recover_account(data: PasswordReset, db: Session = Depends(database.get_db)):
+    db_user = db.query(models.User).filter(models.User.email == data.email).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="No account found with that email address.")
+    if db_user.name.strip().lower() != data.name.strip().lower():
+        raise HTTPException(status_code=400, detail="The name provided does not match the account on file.")
+    if len(data.new_password) < 6:
+        raise HTTPException(status_code=400, detail="New password must be at least 6 characters.")
+    db_user.hashed_password = models.User.get_password_hash(data.new_password)
+    db.commit()
+    return {"status": "success", "detail": "Password has been reset. You can now log in with your new password."}
+@app.get("/users/{user_id}")
+def get_user(user_id: int, db: Session = Depends(database.get_db)):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    vehicles = db.query(models.Vehicle).filter(models.Vehicle.owner_id == db_user.id).all()
+    return {"id": db_user.id, "name": db_user.name, "email": db_user.email, "vehicles": vehicles}
+
 @app.put("/users/{user_id}")
 def update_user(user_id: int, user_update: UserUpdate, db: Session = Depends(database.get_db)):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
@@ -105,9 +142,13 @@ def update_password(user_id: int, pass_update: PasswordUpdate, db: Session = Dep
 def add_vehicle(vehicle: VehicleCreate, user_id: int, db: Session = Depends(database.get_db)):
     new_vehicle = models.Vehicle(**vehicle.dict(), owner_id=user_id)
     db.add(new_vehicle)
-    db.commit()
-    db.refresh(new_vehicle)
-    return new_vehicle
+    try:
+        db.commit()
+        db.refresh(new_vehicle)
+        return new_vehicle
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="A vehicle with this VIN already exists in the system.")
 
 @app.put("/vehicles/{vehicle_id}")
 def update_vehicle(vehicle_id: int, vehicle: VehicleCreate, db: Session = Depends(database.get_db)):
@@ -117,9 +158,24 @@ def update_vehicle(vehicle_id: int, vehicle: VehicleCreate, db: Session = Depend
     db_veh.model = vehicle.model
     db_veh.year = vehicle.year
     db_veh.vin = vehicle.vin
-    db.commit()
-    db.refresh(db_veh)
-    return db_veh
+    db_veh.submodel = vehicle.submodel
+    db_veh.powertrain = vehicle.powertrain
+    db_veh.body_class = vehicle.body_class
+    db_veh.engine_cylinders = vehicle.engine_cylinders
+    db_veh.fuel_type = vehicle.fuel_type
+    db_veh.drive_type = vehicle.drive_type
+    db_veh.displacement = vehicle.displacement
+    db_veh.engine_hp = vehicle.engine_hp
+    db_veh.color = vehicle.color
+    db_veh.color_name = vehicle.color_name
+    db_veh.packages = vehicle.packages
+    try:
+        db.commit()
+        db.refresh(db_veh)
+        return db_veh
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="A vehicle with this VIN already exists in the system.")
 
 @app.delete("/vehicles/{vehicle_id}")
 def delete_vehicle(vehicle_id: int, db: Session = Depends(database.get_db)):
@@ -150,6 +206,37 @@ def get_maintenance_suggestions(req: MaintenanceRequest):
         return {"reply": response.content, "mock_data": mock_data}
     except Exception as e:
         return {"reply": "AI Service Offline. However, your car has active misfires (P0300) and low brake pads (15%). Recommend immediate physical mechanic review.", "mock_data": mock_data}
+
+import urllib.request
+import re
+import urllib.parse
+
+@app.get("/api/fe/makes")
+def get_fe_makes(year: str):
+    url = f"https://www.fueleconomy.gov/ws/rest/vehicle/menu/make?year={year}"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req) as response:
+            data = response.read().decode('utf-8')
+            matches = re.findall(r'<text>(.*?)</text>', data)
+            items = list(sorted(set([m.strip() for m in matches if m.strip()])))
+            return items
+    except Exception as e:
+        return []
+
+@app.get("/api/fe/models")
+def get_fe_models(year: str, make: str):
+    make_encoded = urllib.parse.quote(make)
+    url = f"https://www.fueleconomy.gov/ws/rest/vehicle/menu/model?year={year}&make={make_encoded}"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req) as response:
+            data = response.read().decode('utf-8')
+            matches = re.findall(r'<text>(.*?)</text>', data)
+            items = list(sorted(set([m.strip() for m in matches if m.strip()])))
+            return items
+    except Exception as e:
+        return []
 
 car_states: Dict[str, agents.CarState] = {}
 
