@@ -198,14 +198,40 @@ def chat_endpoint(payload: ChatMessage):
 
 @app.post("/maintenance_suggestions")
 def get_maintenance_suggestions(req: MaintenanceRequest):
-    mock_data = "Diagnostic Codes: P0300 (Random/Multiple Cylinder Misfire Detected), P0171 (System Too Lean). Wear Items: Front brake pads at 15% life, Oil Life at 5%, Tires at 4/32 tread depth."
+    mock_data = "Diagnostic Codes: P0300, P0171. Wear Items: Front brake pads at 15% life, Oil Life at 5%, Tires at 4/32 tread depth."
     try:
         llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
-        prompt = f"You are AutoAgent's master mechanic AI. The user's vehicle (VIN: {req.vin}) just reported the following live sensor statuses:\n{mock_data}\nProvide a professional, formatted assessment and highly detailed recommended repair actions with estimated severity."
+        prompt = f"""You are AutoAgent's master mechanic AI. The user's vehicle (VIN: {req.vin}) just reported the following live sensor statuses:
+{mock_data}
+Provide a highly detailed, realistic health assessment report in list form. Use this exact format:
+Error Codes:
+- [Error Code]: [What it means]
+  - Quickest Fix: [Description]
+  - Cheapest Fix: [Description]
+  - Recommended Fix: [Description]
+
+Maintenance Operations:
+- [Operation 1 based on sensor data, e.g., Oil Change] - [Reason]
+- [Operation 2 based on sensor data] - [Reason]"""
         response = llm.invoke(prompt)
         return {"reply": response.content, "mock_data": mock_data}
     except Exception as e:
-        return {"reply": "AI Service Offline. However, your car has active misfires (P0300) and low brake pads (15%). Recommend immediate physical mechanic review.", "mock_data": mock_data}
+        # Fallback test text
+        test_text = '''Error Codes:
+- P0300: Random/Multiple Cylinder Misfire Detected
+  - Quickest Fix: Replace spark plugs.
+  - Cheapest Fix: Clean ignition coils.
+  - Recommended Fix: Replace spark plugs and inspect ignition coils/wires.
+- P0171: System Too Lean (Bank 1)
+  - Quickest Fix: Clean Mass Air Flow (MAF) sensor.
+  - Cheapest Fix: Check for vacuum leaks.
+  - Recommended Fix: Replace MAF sensor and check O2 sensors.
+
+Maintenance Operations:
+- Oil Change - Oil life is critically low at 5%. Immediate change required to prevent engine damage.
+- Front Brake Pad Replacement - Brake pads are at 15% life, causing decreased braking performance.
+- Tire Replacement (or rotation) - Tread depth is at 4/32, which is approaching the unsafe limit for wet conditions.'''
+        return {"reply": test_text, "mock_data": mock_data}
 
 import urllib.request
 import re

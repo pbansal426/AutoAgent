@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo, createContext, useContext } from 'react';
+import { motion } from 'framer-motion';
 import './App.css';
 
 const API_URL = "http://localhost:8000";
@@ -554,6 +555,7 @@ function MainLayout({ user, setUser }) {
         <div className="nav-center-links">
           <button className={`nav-link ${view === 'garage' ? 'active' : ''}`} onClick={() => setView('garage')}>Garage</button>
           <button className={`nav-link ${view === 'maintenance' ? 'active' : ''}`} onClick={() => setView('maintenance')}>Maintenance</button>
+          <button className={`nav-link ${view === 'insurance' ? 'active' : ''}`} onClick={() => setView('insurance')}>Insurance</button>
         </div>
 
         <div className="nav-actions">
@@ -585,8 +587,9 @@ function MainLayout({ user, setUser }) {
       <main>
         {view === 'settings'    && <Settings user={user} setUser={setUser} activeCar={activeCar} setActiveCar={setActiveCar} onEditCar={navToBuild} onBack={() => setView('garage')} />}
         {view === 'garage'      && <GarageList user={user} setUser={setUser} activeCar={activeCar} setActiveCar={setActiveCar} onAddCar={() => navToBuild(null)} onEnterDashboard={() => setView('dashboard')} />}
-        {view === 'dashboard'   && <DigitalDashboard activeCar={activeCar} onBack={() => setView('garage')} />}
+        {view === 'dashboard'   && <DigitalDashboard activeCar={activeCar} onBack={() => setView('garage')} onNavigate={(v) => setView(v)} />}
         {view === 'maintenance' && <Maintenance activeCar={activeCar} />}
+        {view === 'insurance'   && <InsuranceDashboard activeCar={activeCar} user={user} />}
         {view === 'builder'     && <VehicleBuilderForm user={user} setUser={setUser} setActiveCar={setActiveCar} editModeCar={carToEdit} onCancel={() => setView('garage')} />}
       </main>
 
@@ -769,11 +772,11 @@ function GarageList({ user, setUser, activeCar, setActiveCar, onEnterDashboard, 
             <div className="card-content">
               <h3 className="mb-s">{v.year} {v.make} {v.model}{v.submodel ? ` · ${v.submodel}` : ''}</h3>
               <div style={{ display: 'flex', gap: 'var(--space-m)', flexWrap: 'wrap', marginBottom: 'var(--space-l)' }}>
-                <span className="text-mono text-muted" style={{ fontSize: '0.875rem' }}>VIN: {v.vin}</span>
+                <span className="text-mono text-muted" style={{ fontSize: '0.875rem' }}>Location: 123 Main St, Springfield, IL</span>
                 {v.powertrain && <span style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 500 }}>{v.powertrain}</span>}
               </div>
               <button className="btn btn-secondary" style={{ width: 'fit-content' }} onClick={() => { setActiveCar(v); onEnterDashboard(); }}>
-                <Icons.Activity size={16} /> Enter Telemetry Dashboard
+                <Icons.Activity size={16} /> View Vehicle Profile
               </button>
             </div>
             <div className="card-stats">
@@ -1077,15 +1080,17 @@ function VehicleBuilderForm({ user, setUser, setActiveCar, onCancel, editModeCar
   );
 }
 
-// ─── Digital Dashboard & Maintenance remain unchanged... 
-function DigitalDashboard({ activeCar, onBack }) {
+function DigitalDashboard({ activeCar, onBack, onNavigate }) {
   const [telemetry, setTelemetry] = useState({ speed: 0, rpm: 0 });
   const [crashDetected, setCrashDetected] = useState(false);
   const [diagnostic, setDiagnostic] = useState('');
   const [summary, setSummary] = useState('');
   const [scanning, setScanning] = useState(false);
+  const [carState, setCarState] = useState('driving'); // 'driving', 'parked', 'idling', 'crashed'
+  
   const ws = useRef(null);
   const telemetryInterval = useRef(null);
+  const scanningRef = useRef(false);
   const toast = useToast();
 
   useEffect(() => {
@@ -1095,15 +1100,37 @@ function DigitalDashboard({ activeCar, onBack }) {
       if (activeCar && data.vin === activeCar.vin) {
         setTelemetry({ speed: data.speed, rpm: data.rpm });
         setCrashDetected(data.crash_detected);
-        if (data.deep_diagnostic) { setDiagnostic(data.deep_diagnostic); setScanning(false); toast("Diagnostic complete", "success"); }
+        if (data.deep_diagnostic && scanningRef.current) { 
+          setDiagnostic(data.deep_diagnostic); 
+          setScanning(false); 
+          scanningRef.current = false;
+          toast("Health assessment complete", "success"); 
+        }
         if (data.summary) setSummary(data.summary);
       }
     };
     if (activeCar) {
+      let time = 0;
       telemetryInterval.current = setInterval(() => {
-        const speed = Math.max(0, 50 + Math.sin(Date.now() / 1000) * 10 + (Math.random() - 0.5) * 5);
-        const rpm = Math.max(800, 2000 + Math.sin(Date.now() / 800) * 500 + (Math.random() - 0.5) * 100);
-        fetch(`${API_URL}/telemetry`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vin: activeCar.vin, speed, rpm, timestamp: Date.now() / 1000, ignition_on: true, scan_requested: false }) }).catch(() => {});
+        time += 0.2;
+        setCarState(prev => {
+          if (prev === 'crashed') return 'crashed';
+          let speed = 0;
+          let rpm = 0;
+          if (prev === 'driving') {
+            // Realistic cruising with slight acceleration/deceleration
+            speed = Math.max(0, 60 + Math.sin(time) * 15 + (Math.random() - 0.5) * 3);
+            rpm = Math.max(800, 2200 + Math.sin(time) * 600 + (Math.random() - 0.5) * 200);
+          } else if (prev === 'idling') {
+            speed = 0;
+            rpm = 800 + (Math.random() - 0.5) * 50;
+          } else if (prev === 'parked') {
+            speed = 0;
+            rpm = 0;
+          }
+          fetch(`${API_URL}/telemetry`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vin: activeCar.vin, speed, rpm, timestamp: Date.now() / 1000, ignition_on: prev !== 'parked', scan_requested: false }) }).catch(() => {});
+          return prev;
+        });
       }, 200);
     }
     return () => { ws.current?.close(); clearInterval(telemetryInterval.current); };
@@ -1111,16 +1138,19 @@ function DigitalDashboard({ activeCar, onBack }) {
 
   const handleScan = async () => {
     if (!activeCar) return;
-    setScanning(true); setDiagnostic('');
+    setScanning(true); 
+    scanningRef.current = true;
+    setDiagnostic('');
     await fetch(`${API_URL}/telemetry`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vin: activeCar.vin, speed: telemetry.speed, rpm: telemetry.rpm, timestamp: Date.now() / 1000, ignition_on: true, scan_requested: true }) });
   };
 
   const triggerCrash = async () => {
     if (!activeCar) return;
     toast("Simulating crash event...", "error");
+    setCarState('crashed');
     await fetch(`${API_URL}/telemetry`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vin: activeCar.vin, speed: 80, rpm: 3000, timestamp: Date.now() / 1000, ignition_on: true, scan_requested: false }) });
     setTimeout(async () => {
-      await fetch(`${API_URL}/telemetry`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vin: activeCar.vin, speed: 10, rpm: 0, timestamp: Date.now() / 1000 + 0.1, ignition_on: true, scan_requested: false }) });
+      await fetch(`${API_URL}/telemetry`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vin: activeCar.vin, speed: 0, rpm: 0, timestamp: Date.now() / 1000 + 0.1, ignition_on: true, scan_requested: false }) });
     }, 100);
   };
 
@@ -1133,46 +1163,86 @@ function DigitalDashboard({ activeCar, onBack }) {
           <button className="btn btn-secondary btn-sm" onClick={onBack}>
             <Icons.ChevronLeft size={16} /> Back to Garage
           </button>
-          <h2>Live Telemetry</h2>
+          <h2>Vehicle Profile & Live Telemetry</h2>
+        </div>
+        <div style={{ display: 'flex', gap: 'var(--space-s)' }}>
+          <button className={`btn btn-sm ${carState === 'driving' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setCarState('driving')}>Drive</button>
+          <button className={`btn btn-sm ${carState === 'idling' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setCarState('idling')}>Idle</button>
+          <button className={`btn btn-sm ${carState === 'parked' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setCarState('parked')}>Park</button>
         </div>
       </div>
 
       <div className="settings-layout" style={{ margin: 0, padding: 0, maxWidth: '100%', gridTemplateColumns: 'minmax(300px, 1fr) 2fr' }}>
-        <div className="card" style={{ padding: 'var(--space-xl)' }}>
-          <h3 className="mb-l">{activeCar.year} {activeCar.make} {activeCar.model}</h3>
-          <div className="text-secondary text-mono mb-xl" style={{ fontSize: '0.875rem' }}>VIN: {activeCar.vin}</div>
-          
-          <button className="btn btn-primary mb-m" style={{ width: '100%' }} onClick={handleScan} disabled={scanning}>
-            {scanning ? 'Running Diagnostic...' : 'Run Deep Scan'}
-          </button>
-          
-          <button className="btn btn-secondary" style={{ width: '100%', color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.3)' }} onClick={triggerCrash}>
-             Simulate Crash Event
-          </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-xl)' }}>
+          <div className="card" style={{ padding: 'var(--space-xl)' }}>
+            <h3 className="mb-l">{activeCar.year} {activeCar.make} {activeCar.model}</h3>
+            <div className="text-secondary text-mono mb-xl" style={{ fontSize: '0.875rem' }}>VIN: {activeCar.vin}</div>
+            
+            <div className="mb-l">
+              <div style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)' }}>Current Activity</div>
+              <div style={{ fontSize: '1.125rem', color: carState === 'crashed' ? 'var(--danger)' : 'var(--success)' }}>
+                {carState === 'driving' && "Driving on Interstate 10"}
+                {carState === 'parked' && "Parked at 123 Main St, Springfield"}
+                {carState === 'idling' && "Idling in Driveway"}
+                {carState === 'crashed' && "CRASH DETECTED - VEHICLE IMMOBILIZED"}
+              </div>
+            </div>
+
+            <button className="btn btn-primary mb-m" style={{ width: '100%' }} onClick={handleScan} disabled={scanning}>
+              {scanning ? 'Running Diagnostic...' : 'Run Deep Scan'}
+            </button>
+            
+            <button className="btn btn-secondary" style={{ width: '100%', color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.3)' }} onClick={triggerCrash}>
+               Simulate Crash Event
+            </button>
+          </div>
+
+          <div className="card" style={{ padding: 'var(--space-xl)', background: 'rgba(255,255,255,0.02)' }}>
+            <h4 className="mb-m" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-s)' }}>
+              Insurance & Policy
+            </h4>
+            <p className="text-secondary mb-m" style={{ fontSize: '0.875rem' }}>Your active policy has Smart Sync available. Track your safe driving to earn monthly discounts.</p>
+            <button className="btn btn-secondary btn-sm" style={{ width: '100%' }} onClick={() => onNavigate('insurance')}>
+              Manage Insurance
+            </button>
+          </div>
+
+          <div className="card" style={{ padding: 'var(--space-xl)', background: 'rgba(255,255,255,0.02)' }}>
+            <h4 className="mb-m" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-s)' }}>
+              Maintenance Overview
+            </h4>
+            <p className="text-secondary mb-m" style={{ fontSize: '0.875rem' }}>1 Action Required (Oil Life 5%). Regular maintenance ensures vehicle longevity.</p>
+            <button className="btn btn-secondary btn-sm" style={{ width: '100%' }} onClick={() => onNavigate('maintenance')}>
+              View Maintenance Plan
+            </button>
+          </div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-xl)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-m)' }}>
-            <div className="card" style={{ padding: 'var(--space-2xl)', textAlign: 'center' }}>
-              <div style={{ fontSize: '3rem', fontWeight: 700, fontFamily: 'var(--font-mono)', lineHeight: 1 }}>{telemetry.speed.toFixed(0)}</div>
+            <div className="card" style={{ padding: 'var(--space-2xl)', textAlign: 'center', position: 'relative' }}>
+              <div style={{ fontSize: '3rem', fontWeight: 700, fontFamily: 'var(--font-mono)', lineHeight: 1, color: telemetry.speed > 70 ? 'var(--danger)' : 'var(--text-primary)' }}>{telemetry.speed.toFixed(0)}</div>
               <div className="text-secondary" style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '2px', marginTop: 'var(--space-s)' }}>Speed (MPH)</div>
+              {telemetry.speed > 70 && <div style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(239,68,68,0.2)', color: 'var(--danger)', padding: '2px 8px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 600 }}>Overspeeding</div>}
             </div>
-            <div className="card" style={{ padding: 'var(--space-2xl)', textAlign: 'center' }}>
+            <div className="card" style={{ padding: 'var(--space-2xl)', textAlign: 'center', position: 'relative' }}>
               <div style={{ fontSize: '3rem', fontWeight: 700, fontFamily: 'var(--font-mono)', lineHeight: 1 }}>{telemetry.rpm.toFixed(0)}</div>
               <div className="text-secondary" style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '2px', marginTop: 'var(--space-s)' }}>Engine RPM</div>
+              <div style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(245,158,11,0.2)', color: '#f59e0b', padding: '2px 8px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 600 }}>Fuel Low</div>
             </div>
           </div>
 
           {crashDetected && (
-            <div className="card" style={{ padding: 'var(--space-l)', background: 'rgba(239,68,68,0.1)', border: '1px solid var(--danger)', color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: 'var(--space-m)', fontWeight: 600 }}>
-              <Icons.AlertCircle size={24} /> S.O.S: CRASH DETECTED. Emergency response notified.
+            <div className="card" style={{ padding: 'var(--space-l)', background: 'rgba(239,68,68,0.1)', border: '1px solid var(--danger)', color: 'var(--danger)', display: 'flex', flexDirection: 'column', gap: 'var(--space-s)', fontWeight: 600 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-m)' }}><Icons.AlertCircle size={24} /> S.O.S: CRASH DETECTED</div>
+              <div style={{ fontSize: '0.875rem', fontWeight: 400, opacity: 0.9 }}>Frontal impact detected at 80 MPH. Airbags deployed. Emergency services dispatched to location (123 Main St, Springfield).</div>
             </div>
           )}
 
           {diagnostic && (
             <div className="card" style={{ padding: 'var(--space-xl)' }}>
-              <h4 className="mb-m text-primary" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-s)' }}><Icons.Activity size={18} /> Diagnostic Report</h4>
-              <p style={{ lineHeight: 1.6, color: 'var(--text-secondary)' }}>{diagnostic}</p>
+              <h4 className="mb-m text-primary" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-s)' }}><Icons.Activity size={18} /> Health Assessment</h4>
+              <p style={{ lineHeight: 1.6, color: 'var(--text-secondary)', whiteSpace: 'pre-wrap' }}>{diagnostic}</p>
             </div>
           )}
         </div>
@@ -1278,6 +1348,142 @@ function ChatWidget({ activeCar }) {
         <button type="submit" className="btn btn-primary btn-sm" style={{ height: 36 }}>Send</button>
       </form>
     </div>
+  );
+}
+
+function InsuranceDashboard({ activeCar, user }) {
+  const [syncEnabled, setSyncEnabled] = useState(false);
+  const [syncHash, setSyncHash] = useState('');
+  
+  const toast = useToast();
+
+  const handleSyncToggle = () => {
+    const nextState = !syncEnabled;
+    setSyncEnabled(nextState);
+    if (nextState) {
+      const hash = btoa(`${user.id}-${activeCar?.vin}-${Date.now()}`).substring(0, 16).toUpperCase();
+      setSyncHash(hash);
+      toast("Sync enabled. Secure hash generated.", "success");
+    } else {
+      setSyncHash('');
+      toast("Sync disabled.", "info");
+    }
+  };
+
+  if (!activeCar) {
+    return (
+      <div className="dashboard-container" style={{ textAlign: 'center', padding: 'var(--space-3xl) 0' }}>
+        <h3>Select a vehicle from your Garage to view Insurance.</h3>
+      </div>
+    );
+  }
+
+  const safetyScore = 92;
+  const savings = ((safetyScore / 100) * 45).toFixed(2);
+  const isMaintenanceUpToDate = true;
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="dashboard-container"
+    >
+      <div className="dashboard-header mb-2xl">
+        <h2>Insurance & Savings</h2>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-xl)' }}>
+        
+        {/* Premium Savings Widget */}
+        <div className="card" style={{ padding: 'var(--space-xl)', background: 'rgba(0, 240, 255, 0.05)', border: '1px solid rgba(0, 240, 255, 0.2)', backdropFilter: 'blur(16px)' }}>
+          <h3 className="mb-m" style={{ color: '#00f0ff' }}>Real-time Monthly Savings</h3>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-s)' }}>
+            <span style={{ fontSize: '3rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#00f0ff' }}>
+              <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 1 }}>
+                ${savings}
+              </motion.span>
+            </span>
+            <span className="text-secondary">/ mo</span>
+          </div>
+          <p className="text-secondary mt-m" style={{ fontSize: '0.875rem' }}>Calculated dynamically from your live OBD-II safety score.</p>
+        </div>
+
+        {/* Maintenance Discount Badge */}
+        <div className="card" style={{ padding: 'var(--space-xl)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', background: 'rgba(10, 10, 10, 0.6)', backdropFilter: 'blur(16px)' }}>
+          <div style={{ width: 64, height: 64, borderRadius: '50%', background: isMaintenanceUpToDate ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 'var(--space-m)', border: `2px solid ${isMaintenanceUpToDate ? 'var(--success)' : 'var(--danger)'}` }}>
+            <Icons.CheckCircle size={32} color={isMaintenanceUpToDate ? "var(--success)" : "var(--danger)"} />
+          </div>
+          <h3 className="mb-s">Vehicle Integrity Discount</h3>
+          <p className="text-secondary" style={{ fontSize: '0.875rem' }}>
+            {isMaintenanceUpToDate ? 'Maintenance is up to date. You are receiving the maximum discount.' : 'Complete pending maintenance tasks to unlock this discount.'}
+          </p>
+        </div>
+
+        {/* Policy Sync Toggle */}
+        <div className="card" style={{ padding: 'var(--space-xl)', background: 'rgba(10, 10, 10, 0.6)', backdropFilter: 'blur(16px)' }}>
+          <h3 className="mb-m">Smart Sync</h3>
+          <p className="text-secondary mb-l" style={{ fontSize: '0.875rem' }}>Enable Smart Sync to securely share diagnostic health logs with your insurance provider.</p>
+          
+          <div style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', gap: 'var(--space-m)', marginBottom: 'var(--space-m)' }}>
+            <span style={{ fontWeight: 500, flex: 1 }}>Provider Sync</span>
+            <button 
+              onClick={handleSyncToggle}
+              style={{ width: 48, height: 24, borderRadius: 12, background: syncEnabled ? '#00f0ff' : 'var(--surface-hover)', position: 'relative', transition: 'background 0.3s' }}
+            >
+              <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#fff', position: 'absolute', top: 2, left: syncEnabled ? 26 : 2, transition: 'left 0.3s' }} />
+            </button>
+          </div>
+
+          {syncEnabled && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="text-mono" style={{ padding: 'var(--space-s)', background: 'rgba(0,240,255,0.1)', border: '1px solid rgba(0,240,255,0.3)', borderRadius: 'var(--radius-sm)', color: '#00f0ff', fontSize: '0.8125rem', wordBreak: 'break-all' }}>
+              Active Hash: {syncHash}
+            </motion.div>
+          )}
+        </div>
+
+        {/* Safety Score Breakdown - Concentric Rings */}
+        <div className="card" style={{ padding: 'var(--space-xl)', gridColumn: '1 / -1', background: 'rgba(10, 10, 10, 0.6)', backdropFilter: 'blur(16px)' }}>
+          <h3 className="mb-l">Safety Score Breakdown</h3>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2xl)', alignItems: 'center', justifyContent: 'center' }}>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-s)' }}>
+              <div style={{ position: 'relative', width: 120, height: 120 }}>
+                <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
+                  <motion.circle cx="50" cy="50" r="40" fill="none" stroke="#00f0ff" strokeWidth="8" strokeDasharray="251.2" strokeDashoffset={251.2 * (1 - 0.88)} strokeLinecap="round" initial={{ strokeDashoffset: 251.2 }} animate={{ strokeDashoffset: 251.2 * (1 - 0.88) }} transition={{ duration: 1.5 }} />
+                </svg>
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', fontWeight: 600 }}>88%</div>
+              </div>
+              <span className="text-secondary" style={{ fontSize: '0.875rem' }}>Smooth Braking</span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-s)' }}>
+              <div style={{ position: 'relative', width: 120, height: 120 }}>
+                <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
+                  <motion.circle cx="50" cy="50" r="40" fill="none" stroke="#00f0ff" strokeWidth="8" strokeDasharray="251.2" strokeDashoffset={251.2 * (1 - 0.94)} strokeLinecap="round" initial={{ strokeDashoffset: 251.2 }} animate={{ strokeDashoffset: 251.2 * (1 - 0.94) }} transition={{ duration: 1.5 }} />
+                </svg>
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', fontWeight: 600 }}>94%</div>
+              </div>
+              <span className="text-secondary" style={{ fontSize: '0.875rem' }}>Cornering</span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-s)' }}>
+              <div style={{ position: 'relative', width: 120, height: 120 }}>
+                <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
+                  <motion.circle cx="50" cy="50" r="40" fill="none" stroke="#00f0ff" strokeWidth="8" strokeDasharray="251.2" strokeDashoffset={251.2 * (1 - 0.91)} strokeLinecap="round" initial={{ strokeDashoffset: 251.2 }} animate={{ strokeDashoffset: 251.2 * (1 - 0.91) }} transition={{ duration: 1.5 }} />
+                </svg>
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', fontWeight: 600 }}>91%</div>
+              </div>
+              <span className="text-secondary" style={{ fontSize: '0.875rem' }}>Speed Consistency</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 }
 
