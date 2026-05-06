@@ -54,7 +54,9 @@ AutoAgent leverages a specialized team of AI workers managed by a central digita
 
 ## 🚀 Getting Started
 
-*(Documentation for deployment and local setup coming soon)*
+1. **Clone the repository:** `git clone https://github.com/pbansal426/AutoAgent.git`
+2. **Setup the Backend:** Navigate to `server/`, run `pip install -r requirements.txt`, and start the server with `python main.py`
+3. **Launch the Portal:** Navigate to `app/`, run `npm install`, and start the client with `npm run dev`
 
 ## 📄 License
 AutoAgent © 2026. Designed for ultimate vehicle observability. Built with AG.
