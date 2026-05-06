@@ -82,17 +82,91 @@
         .btn:hover { opacity: 0.8; transform: scale(1.05); }
 
         .footer { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--card-border); margin-top: 60px; }
+
+        /* Demo App Styles */
+        #demo-container {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        .mock-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        .mock-nav-brand { font-weight: 800; color: var(--accent); display: flex; align-items: center; }
+        .mock-nav-links span { margin: 0 15px; color: var(--text-muted); cursor: pointer; }
+        .mock-nav-links span.active { color: var(--text-main); font-weight: 600; }
+        .mock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .mock-header h2 { margin: 0; font-size: 1.8rem; }
+        .mock-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            display: flex;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .mock-card-img {
+            width: 250px;
+            background: rgba(255,255,255,0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-right: 1px solid var(--card-border);
+        }
+        .mock-card-content {
+            flex: 1;
+            padding: 24px;
+        }
+        .mock-card-content h3 { margin: 0 0 10px; font-size: 1.4rem; }
+        .mock-card-stats {
+            display: flex;
+            border-left: 1px solid var(--card-border);
+            min-width: 200px;
+        }
+        .mock-stat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-right: 1px solid var(--card-border);
+        }
+        .mock-stat:last-child { border-right: none; }
+        .mock-stat-val { font-size: 1.5rem; font-weight: 800; }
+        .mock-stat-lbl { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+        @media (max-width: 768px) {
+            .mock-card { flex-direction: column; }
+            .mock-card-img { width: 100%; border-right: none; border-bottom: 1px solid var(--card-border); }
+            .mock-card-stats { border-left: none; border-top: 1px solid var(--card-border); }
+            .mock-nav-links { display: none; }
+        }
     </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="container nav-content">
             <div class="logo">AutoAgent Project</div>
-            <div class="nav-version">Gen2 MVP Architecture</div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <div class="nav-version">Production-Ready Architecture</div>
+                <button class="btn btn-primary" style="padding: 6px 16px; font-size: 0.85rem; cursor: pointer;" onclick="toggleDemo()">Live Demo</button>
+            </div>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container" id="landing-container">
         <header class="hero">
             <h1>1. The Core Concept</h1>
             <p>AutoAgent is a smart bridge between your car and your phone. It takes messy data from your car’s engine (the <strong>Car End</strong>) and turns it into simple, helpful advice on your app (the <strong>User End</strong>) using an AI Master Mechanic and a team of intelligent agents.</p>
@@ -144,19 +218,30 @@
             </div>
         </div>
 
-        <h2 class="section-title">4. MVP Feature Set</h2>
+        <h2 class="section-title">4. AutoAgent Ecosystem Features</h2>
         <div class="grid">
             <div class="card">
+                <h3>🚗 Smart Garage & Registration</h3>
                 <ul class="feature-list">
-                    <li><strong>Live Cockpit:</strong> Real-time engine performance via WebSockets.</li>
-                    <li><strong>AI Master Mechanic:</strong> On-demand P-code translation to plain English.</li>
-                    <li><strong>Safety Heuristics:</strong> Crash detection via G-force/Speed fluctuations.</li>
+                    <li><strong>Advanced Registration:</strong> Progressive form with VIN/License Plate autofill.</li>
+                    <li><strong>Data-Driven Accuracy:</strong> Granular model/trim mapping via FuelEconomy.gov API.</li>
+                    <li><strong>Digital Dashboard:</strong> Real-time vehicle management and telemetry view.</li>
                 </ul>
             </div>
             <div class="card">
+                <h3>🛡️ Insurance & Safety</h3>
                 <ul class="feature-list">
-                    <li><strong>Smart Garage:</strong> Cloud-based management for VIN and maintenance logs.</li>
-                    <li><strong>Gamified Efficiency:</strong> AI-generated Driver Scores to improve safety and fuel use.</li>
+                    <li><strong>Insurance Hub:</strong> Track Premium Savings with interactive Safety Score radar charts.</li>
+                    <li><strong>Smart Sync:</strong> Secure hash-generator toggle for provider data sharing.</li>
+                    <li><strong>Safety Heuristics:</strong> AI-generated driver behavior scoring and crash detection.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>🔧 AI Maintenance & Core</h3>
+                <ul class="feature-list">
+                    <li><strong>Master Mechanic:</strong> Deep AI-driven maintenance diagnostics assistant.</li>
+                    <li><strong>Live Cockpit:</strong> Streaming engine performance metrics via WebSockets.</li>
+                    <li><strong>Secure Access:</strong> Robust authentication with precise error handling.</li>
                 </ul>
             </div>
         </div>
@@ -170,7 +255,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr><td>Frontend</td><td>React + Vite (Web/Mobile Portal)</td></tr>
+                <tr><td>Frontend</td><td>React + Vite (Web/Mobile Portal) with Framer Motion</td></tr>
                 <tr><td>Backend</td><td>FastAPI (Python-based Asynchronous Server)</td></tr>
                 <tr><td>AI Brain</td><td>Google Gemini 1.5 Flash API</td></tr>
                 <tr><td>AI Logic</td><td>LangGraph (Agentic Workflow Management)</td></tr>
@@ -184,10 +269,148 @@
         </div>
     </div>
 
+    <div id="demo-container" style="display: none;">
+        <nav class="mock-nav">
+            <div class="mock-nav-brand">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary, var(--accent))" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                AutoAgent
+            </div>
+            <div class="mock-nav-links">
+                <span class="active" onclick="switchDemoTab('garage', this)">Garage</span>
+                <span onclick="switchDemoTab('maintenance', this)">Maintenance</span>
+                <span onclick="switchDemoTab('insurance', this)">Insurance</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; color: var(--text-main);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span style="font-weight: 600; font-size: 0.9rem;">Demo User</span>
+            </div>
+        </nav>
+
+        <div id="demo-garage" class="demo-tab-content">
+            <div class="mock-header">
+                <h2>My Vehicles</h2>
+            </div>
+            <div class="mock-garage-list">
+                <div class="mock-card">
+                    <div class="mock-card-img">
+                        <img src="https://cdn.imagin.studio/getImage?customer=hrjavascript-mastery&make=lexus&modelFamily=es&modelYear=2024" alt="Lexus" style="width: 100%; object-fit: cover;">
+                    </div>
+                    <div class="mock-card-content">
+                        <h3>2024 Lexus ES 300h</h3>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+                            <span style="font-family: monospace; font-size: 0.85rem; color: var(--text-muted);">Location: 123 Main St, Springfield, IL</span>
+                            <span style="background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; color: var(--accent); font-weight: 500;">Hybrid</span>
+                        </div>
+                    </div>
+                    <div class="mock-card-stats">
+                        <div class="mock-stat">
+                            <div class="mock-stat-val">12,450</div>
+                            <div class="mock-stat-lbl">Miles</div>
+                        </div>
+                        <div class="mock-stat">
+                            <div class="mock-stat-val" style="color: #00f2fe;">98%</div>
+                            <div class="mock-stat-lbl">Health</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mock-card">
+                    <div class="mock-card-img">
+                        <img src="https://cdn.imagin.studio/getImage?customer=hrjavascript-mastery&make=tesla&modelFamily=models&modelYear=2022" alt="Tesla" style="width: 100%; object-fit: cover;">
+                    </div>
+                    <div class="mock-card-content">
+                        <h3>2022 Tesla Model S</h3>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+                            <span style="font-family: monospace; font-size: 0.85rem; color: var(--text-muted);">Location: 123 Main St, Springfield, IL</span>
+                            <span style="background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; color: var(--accent); font-weight: 500;">Electric</span>
+                        </div>
+                    </div>
+                    <div class="mock-card-stats">
+                        <div class="mock-stat">
+                            <div class="mock-stat-val">45,120</div>
+                            <div class="mock-stat-lbl">Miles</div>
+                        </div>
+                        <div class="mock-stat">
+                            <div class="mock-stat-val" style="color: #00f2fe;">92%</div>
+                            <div class="mock-stat-lbl">Health</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="demo-maintenance" class="demo-tab-content" style="display: none;">
+            <div class="mock-header">
+                <h2>Maintenance Overview</h2>
+            </div>
+            <div class="mock-card" style="padding: 40px; text-align: center; flex-direction: column;">
+                <h3 style="color: var(--accent); margin-bottom: 20px;">AI Master Mechanic</h3>
+                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 20px;">Your vehicles are currently reporting zero Diagnostic Trouble Codes (DTCs). All systems are nominal.</p>
+                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <div style="background: rgba(0, 242, 254, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 242, 254, 0.2); min-width: 250px;">
+                        <h4 style="margin: 0 0 10px; font-size: 1.2rem; border-bottom: none;">Lexus ES 300h</h4>
+                        <span style="color: #00ff88; font-weight: bold;">100% System Health</span>
+                    </div>
+                    <div style="background: rgba(0, 242, 254, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 242, 254, 0.2); min-width: 250px;">
+                        <h4 style="margin: 0 0 10px; font-size: 1.2rem; border-bottom: none;">Tesla Model S</h4>
+                        <span style="color: #00ff88; font-weight: bold;">100% System Health</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="demo-insurance" class="demo-tab-content" style="display: none;">
+            <div class="mock-header">
+                <h2>Insurance Hub</h2>
+            </div>
+            <div class="mock-card" style="padding: 40px; text-align: center; flex-direction: column;">
+                <h3 style="color: var(--accent); margin-bottom: 20px;">Premium Savings</h3>
+                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 20px;">Based on your recent safety scores, you are currently eligible for major insurance discounts.</p>
+                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid var(--card-border); min-width: 200px;">
+                        <h4 style="margin: 0 0 10px; font-size: 1.2rem; color: var(--text-main); border-bottom: none;">Safety Score</h4>
+                        <span style="font-size: 2.5rem; color: #00f2fe; font-weight: bold;">94<span style="font-size: 1rem; color: var(--text-muted);">/100</span></span>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid var(--card-border); min-width: 200px;">
+                        <h4 style="margin: 0 0 10px; font-size: 1.2rem; color: var(--text-main); border-bottom: none;">Est. Savings</h4>
+                        <span style="font-size: 2.5rem; color: #00ff88; font-weight: bold;">15%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="container">
             AutoAgent © 2026. Designed for ultimate vehicle observability. Built with AG.
         </div>
     </footer>
+
+    <script>
+        function toggleDemo() {
+            var landing = document.getElementById('landing-container');
+            var demo = document.getElementById('demo-container');
+            var btn = document.querySelector('button[onclick="toggleDemo()"]');
+            if (landing.style.display === 'none') {
+                landing.style.display = 'block';
+                demo.style.display = 'none';
+                btn.innerText = 'Live Demo';
+            } else {
+                landing.style.display = 'none';
+                demo.style.display = 'block';
+                btn.innerText = 'Back to Info';
+            }
+        }
+
+        function switchDemoTab(tabId, el) {
+            document.querySelectorAll('.demo-tab-content').forEach(function(el) { el.style.display = 'none'; });
+            document.getElementById('demo-' + tabId).style.display = 'block';
+            document.querySelectorAll('.mock-nav-links span').forEach(function(el) { el.classList.remove('active'); });
+            el.classList.add('active');
+        }
+    </script>
 </body>
 </html>
