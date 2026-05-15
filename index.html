@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,7 +16,11 @@
             --card-bg: rgba(255, 255, 255, 0.02);
             --card-border: rgba(255, 255, 255, 0.05);
         }
-        * { box-sizing: border-box; }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
@@ -26,7 +31,8 @@
         }
 
         .navbar {
-            position: sticky; top: 0;
+            position: sticky;
+            top: 0;
             backdrop-filter: blur(20px);
             background: rgba(3, 3, 5, 0.7);
             border-bottom: 1px solid var(--card-border);
@@ -40,17 +46,90 @@
             padding: 0 24px;
         }
 
-        .nav-content { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 800; font-size: 1.2rem; background: linear-gradient(135deg, var(--accent), var(--accent-alt)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
-        .nav-version { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; padding: 4px 12px; background: rgba(255,255,255,0.03); border-radius: 20px; border: 1px solid var(--card-border); }
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-        .hero { padding: 80px 0 40px; text-align: center; }
-        .hero h1 { font-size: 3.5rem; font-weight: 800; margin: 0 0 20px; line-height: 1.1; letter-spacing: -1.5px; }
-        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 750px; margin: 0 auto 30px; }
+        .logo {
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
 
-        .section-title { font-size: 1.8rem; font-weight: 800; margin: 60px 0 30px; border-left: 4px solid var(--accent); padding-left: 15px; }
+        .nav-version {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+        }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 40px; }
+        .hero {
+            padding: 80px 0 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 0 0 20px;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 750px;
+            margin: 0 auto 30px;
+        }
+
+        /* Video Showcase Container */
+        .video-showcase {
+            margin: 20px auto 40px;
+            max-width: 800px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 242, 254, 0.03);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-showcase:hover {
+            border-color: rgba(0, 242, 254, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 242, 254, 0.08);
+        }
+
+        .video-player {
+            width: 100%;
+            display: block;
+            border-radius: 14px;
+            outline: none;
+            background: #000;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 60px 0 30px;
+            border-left: 4px solid var(--accent);
+            padding-left: 15px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
 
         .card {
             background: var(--card-bg);
@@ -60,28 +139,125 @@
             transition: transform 0.3s ease;
             position: relative;
         }
-        .card:hover { transform: translateY(-4px); border-color: rgba(0, 242, 254, 0.2); }
-        .card h3 { margin: 0 0 12px; font-size: 1.4rem; color: var(--accent); }
-        .card h4 { margin: 20px 0 10px; font-size: 1rem; color: var(--text-main); border-bottom: 1px solid var(--card-border); padding-bottom: 5px; }
-        .card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 15px; }
 
-        .feature-list { list-style: none; padding: 0; margin: 0; }
-        .feature-list li { padding: 8px 0; font-size: 0.9rem; display: flex; align-items: flex-start; color: var(--text-muted); }
-        .feature-list li::before { content: '•'; color: var(--accent); margin-right: 10px; }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 242, 254, 0.2);
+        }
 
-        .badge { font-size: 0.7rem; background: var(--accent); color: #000; padding: 2px 8px; border-radius: 4px; vertical-align: middle; margin-left: 8px; font-weight: 800; }
+        .card h3 {
+            margin: 0 0 12px;
+            font-size: 1.4rem;
+            color: var(--accent);
+        }
 
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; background: var(--card-bg); border-radius: 12px; overflow: hidden; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--card-border); }
-        th { background: rgba(255,255,255,0.05); color: var(--accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        .card h4 {
+            margin: 20px 0 10px;
+            font-size: 1rem;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 5px;
+        }
 
-        .links-container { display: flex; gap: 20px; justify-content: center; margin: 40px 0; }
-        .btn { padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: 600; transition: 0.3s; }
-        .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-alt)); color: #000; }
-        .btn-secondary { border: 1px solid var(--accent); color: var(--accent); }
-        .btn:hover { opacity: 0.8; transform: scale(1.05); }
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
 
-        .footer { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--card-border); margin-top: 60px; }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            color: var(--text-muted);
+        }
+
+        .feature-list li::before {
+            content: '•';
+            color: var(--accent);
+            margin-right: 10px;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            background: var(--accent);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            vertical-align: middle;
+            margin-left: 8px;
+            font-weight: 800;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .links-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 40px 0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+            color: #000;
+        }
+
+        .btn-secondary {
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--card-border);
+            margin-top: 60px;
+        }
 
         /* Demo App Styles */
         #demo-container {
@@ -89,6 +265,7 @@
             margin: 0 auto;
             padding: 40px 24px;
         }
+
         .mock-nav {
             display: flex;
             justify-content: space-between;
@@ -99,16 +276,37 @@
             border-radius: 12px;
             margin-bottom: 30px;
         }
-        .mock-nav-brand { font-weight: 800; color: var(--accent); display: flex; align-items: center; }
-        .mock-nav-links span { margin: 0 15px; color: var(--text-muted); cursor: pointer; }
-        .mock-nav-links span.active { color: var(--text-main); font-weight: 600; }
+
+        .mock-nav-brand {
+            font-weight: 800;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+        }
+
+        .mock-nav-links span {
+            margin: 0 15px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .mock-nav-links span.active {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
         .mock-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
         }
-        .mock-header h2 { margin: 0; font-size: 1.8rem; }
+
+        .mock-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
         .mock-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -117,25 +315,37 @@
             overflow: hidden;
             margin-bottom: 20px;
         }
+
         .mock-card-img {
             width: 250px;
-            background: rgba(255,255,255,0.02);
+            background: rgba(255, 255, 255, 0.02);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
             border-right: 1px solid var(--card-border);
         }
+
         .mock-card-content {
             flex: 1;
             padding: 24px;
         }
-        .mock-card-content h3 { margin: 0 0 10px; font-size: 1.4rem; }
+
+        .mock-card-content h3 {
+            margin: 0 0 10px;
+            font-size: 1.4rem;
+        }
+
         .mock-card-stats {
             display: flex;
             border-left: 1px solid var(--card-border);
             min-width: 200px;
         }
+
+        .mock-nav-links {
+            display: none;
+        }
+
         .mock-stat {
             flex: 1;
             display: flex;
@@ -144,24 +354,55 @@
             align-items: center;
             border-right: 1px solid var(--card-border);
         }
-        .mock-stat:last-child { border-right: none; }
-        .mock-stat-val { font-size: 1.5rem; font-weight: 800; }
-        .mock-stat-lbl { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+
+        .mock-stat:last-child {
+            border-right: none;
+        }
+
+        .mock-stat-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .mock-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
         @media (max-width: 768px) {
-            .mock-card { flex-direction: column; }
-            .mock-card-img { width: 100%; border-right: none; border-bottom: 1px solid var(--card-border); }
-            .mock-card-stats { border-left: none; border-top: 1px solid var(--card-border); }
-            .mock-nav-links { display: none; }
+            .mock-card {
+                flex-direction: column;
+            }
+
+            .mock-card-img {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--card-border);
+            }
+
+            .mock-card-stats {
+                border-left: none;
+                border-top: 1px solid var(--card-border);
+            }
+
+            .mock-nav-links {
+                display: none;
+            }
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar">
         <div class="container nav-content">
             <div class="logo">AutoAgent Project</div>
             <div style="display: flex; gap: 15px; align-items: center;">
                 <div class="nav-version">Production-Ready Architecture</div>
-                <button class="btn btn-primary" style="padding: 6px 16px; font-size: 0.85rem; cursor: pointer;" onclick="toggleDemo()">Live Demo</button>
+                <button class="btn btn-primary" style="padding: 6px 16px; font-size: 0.85rem; cursor: pointer;"
+                    onclick="toggleDemo()">Live Demo</button>
             </div>
         </div>
     </nav>
@@ -169,14 +410,25 @@
     <div class="container" id="landing-container">
         <header class="hero">
             <h1>1. The Core Concept</h1>
-            <p>AutoAgent is a smart bridge between your car and your phone. It takes messy data from your car’s engine (the <strong>Car End</strong>) and turns it into simple, helpful advice on your app (the <strong>User End</strong>) using an AI Master Mechanic and a team of intelligent agents.</p>
+            <p>AutoAgent is a smart bridge between your car and your phone. It takes messy data from your car’s engine
+                (the <strong>Car End</strong>) and turns it into simple, helpful advice on your app (the <strong>User
+                    End</strong>) using an AI Master Mechanic and a team of intelligent agents.</p>
         </header>
+
+        <!-- New Seamless Video Demo Section -->
+        <div class="video-showcase">
+            <video class="video-player" controls preload="metadata" poster="">
+                <source src="demo.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
 
         <h2 class="section-title">2. System Segmentation</h2>
         <div class="grid">
             <div class="card">
                 <h3>📡 The Car End</h3>
-                <p>The physical "Brain" of the operation acting as the primary data collector and real-time sentinel.</p>
+                <p>The physical "Brain" of the operation acting as the primary data collector and real-time sentinel.
+                </p>
                 <ul class="feature-list">
                     <li><strong>Interface:</strong> Plugs into the standard OBD2 port.</li>
                     <li><strong>Processing:</strong> Raspberry Pi handles initial data filtering.</li>
@@ -190,28 +442,34 @@
                 <p>The interface where data becomes value. This is the primary portal for the driver.</p>
                 <ul class="feature-list">
                     <li><strong>The App:</strong> A React-based web and mobile dashboard.</li>
-                    <li><strong>The Vault:</strong> Secure PostgreSQL database for user profiles and vehicle history.</li>
-                    <li><strong>AI Hosting:</strong> Backend logic where Gemini and LangGraph process raw data into repair plans.</li>
+                    <li><strong>The Vault:</strong> Secure PostgreSQL database for user profiles and vehicle history.
+                    </li>
+                    <li><strong>AI Hosting:</strong> Backend logic where Gemini and LangGraph process raw data into
+                        repair plans.</li>
                 </ul>
             </div>
         </div>
 
         <h2 class="section-title">3. The AI Intelligence Stack</h2>
         <div class="card" style="margin-bottom: 24px;">
-            <p>AutoAgent uses a specialized team of AI workers that share the same "brain" but have different jobs. This setup ensures the car is monitored from every angle.</p>
+            <p>AutoAgent uses a specialized team of AI workers that share the same "brain" but have different jobs. This
+                setup ensures the car is monitored from every angle.</p>
             <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-top: 20px;">
                 <div>
                     <h4>Core Intelligence</h4>
                     <ul class="feature-list">
-                        <li><strong>Gemini 1.5 Flash:</strong> Raw AI power providing high-speed reasoning and code interpretation.</li>
-                        <li><strong>LangGraph:</strong> The digital manager ensuring agents follow logical rules and safety paths.</li>
+                        <li><strong>Gemini 1.5 Flash:</strong> Raw AI power providing high-speed reasoning and code
+                            interpretation.</li>
+                        <li><strong>LangGraph:</strong> The digital manager ensuring agents follow logical rules and
+                            safety paths.</li>
                     </ul>
                 </div>
                 <div>
                     <h4>Specialized Nodes</h4>
                     <ul class="feature-list">
                         <li><strong>SafetyNode:</strong> Detects crashes or mechanical failures instantly.</li>
-                        <li><strong>TripAnalystNode:</strong> Post-drive scans for driving scores and small glitches.</li>
+                        <li><strong>TripAnalystNode:</strong> Post-drive scans for driving scores and small glitches.
+                        </li>
                         <li><strong>TrendStrategistNode:</strong> Weekly scans for long-term health (battery/MPG).</li>
                     </ul>
                 </div>
@@ -231,9 +489,11 @@
             <div class="card">
                 <h3>🛡️ Insurance & Safety</h3>
                 <ul class="feature-list">
-                    <li><strong>Insurance Hub:</strong> Track Premium Savings with interactive Safety Score radar charts.</li>
+                    <li><strong>Insurance Hub:</strong> Track Premium Savings with interactive Safety Score radar
+                        charts.</li>
                     <li><strong>Smart Sync:</strong> Secure hash-generator toggle for provider data sharing.</li>
-                    <li><strong>Safety Heuristics:</strong> AI-generated driver behavior scoring and crash detection.</li>
+                    <li><strong>Safety Heuristics:</strong> AI-generated driver behavior scoring and crash detection.
+                    </li>
                 </ul>
             </div>
             <div class="card">
@@ -255,24 +515,45 @@
                 </tr>
             </thead>
             <tbody>
-                <tr><td>Frontend</td><td>React + Vite (Web/Mobile Portal) with Framer Motion</td></tr>
-                <tr><td>Backend</td><td>FastAPI (Python-based Asynchronous Server)</td></tr>
-                <tr><td>AI Brain</td><td>Google Gemini 1.5 Flash API</td></tr>
-                <tr><td>AI Logic</td><td>LangGraph (Agentic Workflow Management)</td></tr>
-                <tr><td>Database</td><td>PostgreSQL / SQLAlchemy (Persistent Storage)</td></tr>
-                <tr><td>Communication</td><td>WebSockets (for 5 Hz real-time streaming)</td></tr>
+                <tr>
+                    <td>Frontend</td>
+                    <td>React + Vite (Web/Mobile Portal) with Framer Motion</td>
+                </tr>
+                <tr>
+                    <td>Backend</td>
+                    <td>FastAPI (Python-based Asynchronous Server)</td>
+                </tr>
+                <tr>
+                    <td>AI Brain</td>
+                    <td>Google Gemini 1.5 Flash API</td>
+                </tr>
+                <tr>
+                    <td>AI Logic</td>
+                    <td>LangGraph (Agentic Workflow Management)</td>
+                </tr>
+                <tr>
+                    <td>Database</td>
+                    <td>PostgreSQL / SQLAlchemy (Persistent Storage)</td>
+                </tr>
+                <tr>
+                    <td>Communication</td>
+                    <td>WebSockets (for 5 Hz real-time streaming)</td>
+                </tr>
             </tbody>
         </table>
 
         <div class="links-container">
-            <a href="https://github.com/pbansal426/AutoAgent" class="btn btn-secondary" target="_blank">GitHub Repository</a>
+            <a href="https://github.com/pbansal426/AutoAgent" class="btn btn-secondary" target="_blank">GitHub
+                Repository</a>
         </div>
     </div>
 
     <div id="demo-container" style="display: none;">
         <nav class="mock-nav">
             <div class="mock-nav-brand">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary, var(--accent))" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary, var(--accent))"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    style="vertical-align: middle; margin-right: 8px;">
                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                 </svg>
                 AutoAgent
@@ -283,8 +564,10 @@
                 <span onclick="switchDemoTab('insurance', this)">Insurance</span>
             </div>
             <div style="display: flex; align-items: center; gap: 8px; color: var(--text-main);">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
                 </svg>
                 <span style="font-weight: 600; font-size: 0.9rem;">Demo User</span>
             </div>
@@ -297,13 +580,17 @@
             <div class="mock-garage-list">
                 <div class="mock-card">
                     <div class="mock-card-img">
-                        <img src="https://cdn.imagin.studio/getImage?customer=hrjavascript-mastery&make=lexus&modelFamily=es&modelYear=2024" alt="Lexus" style="width: 100%; object-fit: cover;">
+                        <img src="https://cdn.imagin.studio/getImage?customer=hrjavascript-mastery&make=lexus&modelFamily=es&modelYear=2024"
+                            alt="Lexus" style="width: 100%; object-fit: cover;">
                     </div>
                     <div class="mock-card-content">
                         <h3>2024 Lexus ES 300h</h3>
                         <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
-                            <span style="font-family: monospace; font-size: 0.85rem; color: var(--text-muted);">Location: 123 Main St, Springfield, IL</span>
-                            <span style="background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; color: var(--accent); font-weight: 500;">Hybrid</span>
+                            <span
+                                style="font-family: monospace; font-size: 0.85rem; color: var(--text-muted);">Location:
+                                123 Main St, Springfield, IL</span>
+                            <span
+                                style="background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; color: var(--accent); font-weight: 500;">Hybrid</span>
                         </div>
                     </div>
                     <div class="mock-card-stats">
@@ -319,13 +606,17 @@
                 </div>
                 <div class="mock-card">
                     <div class="mock-card-img">
-                        <img src="https://cdn.imagin.studio/getImage?customer=hrjavascript-mastery&make=tesla&modelFamily=models&modelYear=2022" alt="Tesla" style="width: 100%; object-fit: cover;">
+                        <img src="https://cdn.imagin.studio/getImage?customer=hrjavascript-mastery&make=tesla&modelFamily=models&modelYear=2022"
+                            alt="Tesla" style="width: 100%; object-fit: cover;">
                     </div>
                     <div class="mock-card-content">
                         <h3>2022 Tesla Model S</h3>
                         <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
-                            <span style="font-family: monospace; font-size: 0.85rem; color: var(--text-muted);">Location: 123 Main St, Springfield, IL</span>
-                            <span style="background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; color: var(--accent); font-weight: 500;">Electric</span>
+                            <span
+                                style="font-family: monospace; font-size: 0.85rem; color: var(--text-muted);">Location:
+                                123 Main St, Springfield, IL</span>
+                            <span
+                                style="background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; color: var(--accent); font-weight: 500;">Electric</span>
                         </div>
                     </div>
                     <div class="mock-card-stats">
@@ -348,13 +639,16 @@
             </div>
             <div class="mock-card" style="padding: 40px; text-align: center; flex-direction: column;">
                 <h3 style="color: var(--accent); margin-bottom: 20px;">AI Master Mechanic</h3>
-                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 20px;">Your vehicles are currently reporting zero Diagnostic Trouble Codes (DTCs). All systems are nominal.</p>
+                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 20px;">Your vehicles are currently
+                    reporting zero Diagnostic Trouble Codes (DTCs). All systems are nominal.</p>
                 <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                    <div style="background: rgba(0, 242, 254, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 242, 254, 0.2); min-width: 250px;">
+                    <div
+                        style="background: rgba(0, 242, 254, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 242, 254, 0.2); min-width: 250px;">
                         <h4 style="margin: 0 0 10px; font-size: 1.2rem; border-bottom: none;">Lexus ES 300h</h4>
                         <span style="color: #00ff88; font-weight: bold;">100% System Health</span>
                     </div>
-                    <div style="background: rgba(0, 242, 254, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 242, 254, 0.2); min-width: 250px;">
+                    <div
+                        style="background: rgba(0, 242, 254, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 242, 254, 0.2); min-width: 250px;">
                         <h4 style="margin: 0 0 10px; font-size: 1.2rem; border-bottom: none;">Tesla Model S</h4>
                         <span style="color: #00ff88; font-weight: bold;">100% System Health</span>
                     </div>
@@ -368,14 +662,20 @@
             </div>
             <div class="mock-card" style="padding: 40px; text-align: center; flex-direction: column;">
                 <h3 style="color: var(--accent); margin-bottom: 20px;">Premium Savings</h3>
-                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 20px;">Based on your recent safety scores, you are currently eligible for major insurance discounts.</p>
+                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 20px;">Based on your recent safety
+                    scores, you are currently eligible for major insurance discounts.</p>
                 <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                    <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid var(--card-border); min-width: 200px;">
-                        <h4 style="margin: 0 0 10px; font-size: 1.2rem; color: var(--text-main); border-bottom: none;">Safety Score</h4>
-                        <span style="font-size: 2.5rem; color: #00f2fe; font-weight: bold;">94<span style="font-size: 1rem; color: var(--text-muted);">/100</span></span>
+                    <div
+                        style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid var(--card-border); min-width: 200px;">
+                        <h4 style="margin: 0 0 10px; font-size: 1.2rem; color: var(--text-main); border-bottom: none;">
+                            Safety Score</h4>
+                        <span style="font-size: 2.5rem; color: #00f2fe; font-weight: bold;">94<span
+                                style="font-size: 1rem; color: var(--text-muted);">/100</span></span>
                     </div>
-                    <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid var(--card-border); min-width: 200px;">
-                        <h4 style="margin: 0 0 10px; font-size: 1.2rem; color: var(--text-main); border-bottom: none;">Est. Savings</h4>
+                    <div
+                        style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid var(--card-border); min-width: 200px;">
+                        <h4 style="margin: 0 0 10px; font-size: 1.2rem; color: var(--text-main); border-bottom: none;">
+                            Est. Savings</h4>
                         <span style="font-size: 2.5rem; color: #00ff88; font-weight: bold;">15%</span>
                     </div>
                 </div>
@@ -394,6 +694,10 @@
             var landing = document.getElementById('landing-container');
             var demo = document.getElementById('demo-container');
             var btn = document.querySelector('button[onclick="toggleDemo()"]');
+
+            // Grab the video element to pause it if the user leaves the landing page
+            var video = document.querySelector('.video-player');
+
             if (landing.style.display === 'none') {
                 landing.style.display = 'block';
                 demo.style.display = 'none';
@@ -402,15 +706,17 @@
                 landing.style.display = 'none';
                 demo.style.display = 'block';
                 btn.innerText = 'Back to Info';
+                if (video) video.pause(); // Clean UX implementation
             }
         }
 
         function switchDemoTab(tabId, el) {
-            document.querySelectorAll('.demo-tab-content').forEach(function(el) { el.style.display = 'none'; });
+            document.querySelectorAll('.demo-tab-content').forEach(function (el) { el.style.display = 'none'; });
             document.getElementById('demo-' + tabId).style.display = 'block';
-            document.querySelectorAll('.mock-nav-links span').forEach(function(el) { el.classList.remove('active'); });
+            document.querySelectorAll('.mock-nav-links span').forEach(function (el) { el.classList.remove('active'); });
             el.classList.add('active');
         }
     </script>
 </body>
+
 </html>
